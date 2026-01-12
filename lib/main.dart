@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,48 +25,41 @@ class OnboardingPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
+        clipBehavior: Clip.none,
         children: [
-          // GREEN BACKGROUND SHAPE
-          Positioned(
-            right: -100,
-            top: 0,
-            bottom: 0,
-            child: Container(
-              width: 300,
-              decoration: const BoxDecoration(
-                color: Color(0xFF9BE28F),
-                borderRadius: BorderRadius.horizontal(
-                  left: Radius.circular(200),
+          // SVG BACKGROUND
+          Positioned.fill(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Transform.translate(
+                offset: const Offset(110, 0), // tweak 80..160
+                child: SvgPicture.asset(
+                  'assets/circle.svg',
+                  width: 325,
+                  fit: BoxFit.cover,
+                  alignment: Alignment.centerLeft,
                 ),
               ),
             ),
           ),
 
-          // TEXT + BUTTON CONTENT
+          // CONTENT
           Padding(
             padding: const EdgeInsets.all(24.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 100),
-
                 const Text(
                   "Hello\nMaria!",
-                  style: TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
                 ),
-
                 const SizedBox(height: 16),
-
                 const Text(
                   "Sign up in a few easy steps\nand let’s get your business\nbooming right away",
                   style: TextStyle(fontSize: 16),
                 ),
-
                 const Spacer(),
-
                 SizedBox(
                   width: 220,
                   height: 50,
@@ -83,7 +77,6 @@ class OnboardingPage extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 40),
               ],
             ),
@@ -93,4 +86,3 @@ class OnboardingPage extends StatelessWidget {
     );
   }
 }
-
