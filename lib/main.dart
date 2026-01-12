@@ -32,7 +32,7 @@ class OnboardingPage extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerRight,
               child: Transform.translate(
-                offset: const Offset(110, 0), // tweak 80..160
+                offset: const Offset(150, 0), // tweak 80..160
                 child: SvgPicture.asset(
                   'assets/circle.svg',
                   width: 325,
