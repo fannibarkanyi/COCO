@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'models/button.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,7 +33,7 @@ class OnboardingPage extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerRight,
               child: Transform.translate(
-                offset: const Offset(150, 0), // tweak 80..160
+                offset: const Offset(0, 0), // tweak 80..160
                 child: SvgPicture.asset(
                   'assets/circle.svg',
                   width: 325,
@@ -60,24 +61,31 @@ class OnboardingPage extends StatelessWidget {
                   style: TextStyle(fontSize: 16),
                 ),
                 const Spacer(),
-                SizedBox(
-                  width: 220,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20, bottom: 200),
+                    child: PrimaryButton(
+                      text: "Make the first step",
+                      width: 272,
+                      height: 61,
+                      fontSize: 26,
+                      trailing: Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: SvgPicture.asset(
+                          'assets/arrow.svg',
+                          width: 18,
+                          height: 18,
+                          colorFilter: const ColorFilter.mode(
+                            Color.fromRGBO(235, 235, 235, 1),
+                            BlendMode.srcIn,
+                          ),
+                        ),
                       ),
-                    ),
-                    child: const Text(
-                      "Make the first step  >",
-                      style: TextStyle(color: Colors.white),
+                      onPressed: () {},
                     ),
                   ),
                 ),
-                const SizedBox(height: 40),
               ],
             ),
           ),
