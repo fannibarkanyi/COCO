@@ -24,7 +24,7 @@ class OnboardingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color.fromRGBO(235, 235, 235, 1),
       body: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -51,15 +51,62 @@ class OnboardingPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 100),
-                const Text(
-                  "Hello\nMaria!",
-                  style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Hello",
+                      style: TextStyle(
+                        fontSize: 90,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter',
+                        color: Color.fromRGBO(43, 43, 43, 1),
+                        height: 88 / 90,
+                      ),
+                    ),
+
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(235, 235, 235, 1),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: const Text(
+                        "Maria!",
+                        style: TextStyle(
+                          fontSize: 90,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Inter',
+                          color: Color.fromRGBO(43, 43, 43, 1),
+                          height: 88 / 90,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 16),
-                const Text(
-                  "Sign up in a few easy steps\nand let’s get your business\nbooming right away",
-                  style: TextStyle(fontSize: 16),
+
+                const SizedBox(height: 50),
+                Padding(
+                  padding: const EdgeInsets.only(right: 20),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: const Text(
+                      "Sign up in a few easy steps\nand let’s get your business\nbooming right away",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Inter',
+                        color: Color.fromRGBO(43, 43, 43, 1),
+                        height: 20 / 18,
+                      ),
+                    ),
+                  ),
                 ),
+
                 const Spacer(),
                 Align(
                   alignment: Alignment.bottomLeft,
