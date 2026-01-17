@@ -33,15 +33,16 @@ class HomePage extends StatelessWidget {
           ),
 
           Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: SizedBox(
-              height: svgHeight,
-              child: SvgPicture.asset(
-                'assets/circ3.svg',
-                fit: BoxFit.fitWidth,
-                alignment: Alignment.bottomLeft,
+  bottom: 0,
+  left: 0,
+  right: 0,
+  child: SvgPicture.asset(
+    'assets/circ_bottom.svg',
+    fit: BoxFit.fitWidth,        // scale to screen width
+    alignment: Alignment.bottomLeft,
+  ),
+),
+
               ),
             ),
           ),
@@ -49,6 +50,6 @@ class HomePage extends StatelessWidget {
           // page content goes here
         ],
       ),
-    );
+    )
   }
 }
