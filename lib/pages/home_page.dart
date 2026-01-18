@@ -18,6 +18,7 @@ class HomePage extends StatelessWidget {
       body: Stack(
         clipBehavior: Clip.none,
         children: [
+          // TOP SVG
           Positioned(
             top: 0,
             left: 0,
@@ -32,24 +33,22 @@ class HomePage extends StatelessWidget {
             ),
           ),
 
+          // BOTTOM SVG (auto height)
           Positioned(
-  bottom: 0,
-  left: 0,
-  right: 0,
-  child: SvgPicture.asset(
-    'assets/circ_bottom.svg',
-    fit: BoxFit.fitWidth,        // scale to screen width
-    alignment: Alignment.bottomLeft,
-  ),
-),
-
-              ),
+            bottom: -80, // tweak
+            left: -220, // tweak (push off-screen so only the curve shows)
+            child: SvgPicture.asset(
+              'assets/circ_bottom.svg',
+              width:
+                  MediaQuery.of(context).size.width * 1.6, // bigger than screen
+              fit: BoxFit.cover,
+              alignment: Alignment.bottomLeft,
             ),
           ),
 
           // page content goes here
         ],
       ),
-    )
+    );
   }
 }
