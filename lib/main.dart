@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'models/button.dart';
-import 'pages/home_page.dart';
+import 'package:coco/pages/app_shell.dart' as shell;
 
 void main() {
   runApp(const MyApp());
@@ -131,10 +131,10 @@ class OnboardingPage extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const HomePage(),
+                            builder: (_) => shell.AppShell(),
                           ),
                         );
                       },
