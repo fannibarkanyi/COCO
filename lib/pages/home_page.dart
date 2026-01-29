@@ -34,7 +34,19 @@ class HomePage extends StatelessWidget {
             ),
           ),
 
-          // BOTTOM SVG
+          // NEW: BOTTOM GREEN CIRCLE (HomePage)
+          Positioned(
+            left: 0,
+            right: 300,
+            bottom: 0, // change to -20 / -40 if you want it lower
+            child: SvgPicture.asset(
+              'assets/circlehp.svg',
+              fit: BoxFit.fitWidth,
+              alignment: Alignment.bottomCenter,
+            ),
+          ),
+
+          // OPTIONAL: keep/remove your older bottom svg (remove if you don't need it)
           Positioned(
             bottom: -80,
             left: -220,
@@ -148,7 +160,7 @@ class HomePage extends StatelessWidget {
                           width: 34,
                           height: 34,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Icon(
