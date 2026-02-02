@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:coco/pages/creating_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final w = MediaQuery.of(context).size.width;
+    final h = MediaQuery.of(context).size.height;
 
+    // TOP SVG sizing
     const double svgViewBoxWidth = 393;
     const double svgViewBoxHeight = 194;
-    final double svgHeight = screenWidth * (svgViewBoxHeight / svgViewBoxWidth);
+    final double topSvgHeight = w * (svgViewBoxHeight / svgViewBoxWidth);
 
     const bg = Color.fromRGBO(235, 235, 235, 1);
     const darkCard = Color(0xFF2F2F2F);
@@ -25,7 +28,7 @@ class HomePage extends StatelessWidget {
             left: 0,
             right: 0,
             child: SizedBox(
-              height: svgHeight,
+              height: topSvgHeight,
               child: SvgPicture.asset(
                 'assets/circ2.svg',
                 fit: BoxFit.fitWidth,
@@ -34,27 +37,18 @@ class HomePage extends StatelessWidget {
             ),
           ),
 
-          // NEW: BOTTOM GREEN CIRCLE (HomePage)
+          // BOTTOM GREEN SHAPE (unchanged)
           Positioned(
-            left: 0,
-            right: 300,
-            bottom: 0, // change to -20 / -40 if you want it lower
-            child: SvgPicture.asset(
-              'assets/circlehp.svg',
-              fit: BoxFit.fitWidth,
-              alignment: Alignment.bottomCenter,
-            ),
-          ),
-
-          // OPTIONAL: keep/remove your older bottom svg (remove if you don't need it)
-          Positioned(
-            bottom: -80,
-            left: -220,
-            child: SvgPicture.asset(
-              'assets/circ_bottom.svg',
-              width: screenWidth * 1.6,
-              fit: BoxFit.cover,
-              alignment: Alignment.bottomLeft,
+            bottom: 0,
+            left: -w * 0.45,
+            child: SizedBox(
+              width: w * 1.9,
+              height: h * 0.33,
+              child: SvgPicture.asset(
+                'assets/circlehp.svg',
+                fit: BoxFit.cover,
+                alignment: Alignment.bottomCenter,
+              ),
             ),
           ),
 
@@ -63,7 +57,7 @@ class HomePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // HEADER TEXT
+                // HEADER
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
                   child: const Column(
@@ -92,90 +86,99 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 28),
+               const Spacer(),
 
-                // BIG ACTION CARD
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Container(
-                    height: 120,
-                    padding: const EdgeInsets.all(18),
-                    decoration: BoxDecoration(
-                      color: darkCard,
-                      borderRadius: BorderRadius.circular(18),
+/// BIG ACTION CARD (CLICKABLE, centered)
+Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 24),
+  child: Align(
+    alignment: Alignment.center,
+    child: Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(18),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const CreatingPage()),
+          );
+        },
+        child: Container(
+          width: double.infinity,
+          height: 118,
+          padding: const EdgeInsets.fromLTRB(18, 18, 18, 18),
+          decoration: BoxDecoration(
+            color: const Color(0xFF2F2F2F),
+            borderRadius: BorderRadius.circular(18),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // LEFT TEXT
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Create a",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: "Inter",
+                        height: 1.0,
+                      ),
                     ),
-                    child: Row(
-                      children: [
-                        // plus icon
-                        Container(
-                          width: 42,
-                          height: 42,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white, width: 2),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Center(
-                            child: Text(
-                              "+",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 26,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 14),
-
-                        const Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Create a\nPost",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.w700,
-                                  height: 1.0,
-                                  fontFamily: "Inter",
-                                ),
-                              ),
-                              SizedBox(height: 6),
-                              Text(
-                                "post something for your page",
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: "Inter",
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        Container(
-                          width: 34,
-                          height: 34,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Icon(
-                            Icons.chevron_right,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
+                    SizedBox(height: 2),
+                    Text(
+                      "Post",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 38,
+                        fontWeight: FontWeight.w800,
+                        fontFamily: "Inter",
+                        height: 0.95,
+                      ),
                     ),
-                  ),
+                    SizedBox(height: 6),
+                    Text(
+                      "post something for your page",
+                      style: TextStyle(
+                        color: Color.fromRGBO(220, 220, 220, 1),
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Inter",
+                        height: 1.1,
+                      ),
+                    ),
+                  ],
                 ),
+              ),
 
-                const Spacer(), // pushes the two cards down
+              // RIGHT ARROW BUTTON
+              Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  color: const Color.fromRGBO(255, 255, 255, 0.18),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.chevron_right,
+                  color: Colors.white,
+                  size: 22,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  ),
+),
+                const Spacer(),
 
-                // TWO SMALL CARDS
+                // SMALL CARDS
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Row(
@@ -184,7 +187,8 @@ class HomePage extends StatelessWidget {
                         child: _SmallCard(
                           titleTop: "Your",
                           titleBig: "Activity",
-                          subtitle: "see your\nprevious posts,\nstories, etc",
+                          subtitle:
+                              "see your\nprevious posts,\nstories, etc",
                         ),
                       ),
                       SizedBox(width: 14),
@@ -200,7 +204,6 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
 
-                // Space so the cards don’t feel glued to the bottom nav from AppShell
                 const SizedBox(height: 24),
               ],
             ),
@@ -211,6 +214,47 @@ class HomePage extends StatelessWidget {
   }
 }
 
+// ─────────────────────────────────────────────
+// CREATING PAGE
+// ─────────────────────────────────────────────
+class CreatingPage extends StatelessWidget {
+  const CreatingPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color.fromRGBO(235, 235, 235, 1),
+      appBar: AppBar(
+        backgroundColor: const Color.fromRGBO(235, 235, 235, 1),
+        elevation: 0,
+        iconTheme: const IconThemeData(
+          color: Color.fromRGBO(43, 43, 43, 1),
+        ),
+        title: const Text(
+          "Creating",
+          style: TextStyle(
+            color: Color.fromRGBO(43, 43, 43, 1),
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+      body: const Center(
+        child: Text(
+          "Creating page",
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            color: Color.fromRGBO(43, 43, 43, 1),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────
+// SMALL CARD
+// ─────────────────────────────────────────────
 class _SmallCard extends StatelessWidget {
   final String titleTop;
   final String titleBig;
