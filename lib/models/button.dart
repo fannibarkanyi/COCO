@@ -41,9 +41,9 @@ class PrimaryButton extends StatelessWidget {
             Text(
               text,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Color.fromRGBO(235, 235, 235, 1),
-                fontSize: 18,
+              style: TextStyle(
+                color: const Color.fromRGBO(235, 235, 235, 1),
+                fontSize: fontSize,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.bold,
               ),

@@ -110,38 +110,39 @@ class OnboardingPage extends StatelessWidget {
                 ),
 
                 const Spacer(),
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20, bottom: 200),
-                    child: PrimaryButton(
-                      text: "Make the first step",
-                      width: 272,
-                      height: 61,
-                      fontSize: 26,
-                      trailing: Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: SvgPicture.asset(
-                          'assets/arrow.svg',
-                          width: 18,
-                          height: 18,
-                          colorFilter: const ColorFilter.mode(
-                            Color.fromRGBO(235, 235, 235, 1),
-                            BlendMode.srcIn,
-                          ),
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => shell.AppShell(),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
+
+Padding(
+  padding: const EdgeInsets.fromLTRB(20, 0, 20, 200),
+  child: SizedBox(
+    width: double.infinity, // 👈 forces it to stay inside screen
+    child: PrimaryButton(
+      text: "Make the first step",
+      height: 61,
+      fontSize: 26,
+      trailing: Padding(
+        padding: const EdgeInsets.only(left: 10),
+        child: SvgPicture.asset(
+          'assets/arrow.svg',
+          width: 18,
+          height: 18,
+          colorFilter: const ColorFilter.mode(
+            Color.fromRGBO(235, 235, 235, 1),
+            BlendMode.srcIn,
+          ),
+        ),
+      ),
+      onPressed: () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => shell.AppShell(),
+          ),
+        );
+      },
+    ),
+  ),
+),
+
               ],
             ),
           ),

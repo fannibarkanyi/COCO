@@ -10,15 +10,15 @@ class CreatingPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
-          'Creating',
-          style: TextStyle(color: Colors.black),
-        ),
         iconTheme: const IconThemeData(color: Colors.black),
+        title: const Text(
+          "Creating",
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+        ),
       ),
       body: const Center(
         child: Text(
-          'Creating page',
+          "Creating page",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
         ),
       ),

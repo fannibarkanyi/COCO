@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:coco/pages/home_page.dart';
+import 'package:coco/pages/profile_page.dart';
 import 'package:coco/widgets/bottom_nav.dart';
 
 class AppShell extends StatefulWidget {
@@ -14,9 +15,9 @@ class _AppShellState extends State<AppShell> {
 
   final pages = const [
     HomePage(),
-    Placeholder(),
-    Placeholder(),
-    Placeholder(),
+    Placeholder(), // analytics / whatever
+    Placeholder(), // chat / whatever
+    ProfilePage(), // <- PROFILE TAB
   ];
 
   @override

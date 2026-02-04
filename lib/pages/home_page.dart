@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:coco/pages/creating_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -36,7 +37,7 @@ class HomePage extends StatelessWidget {
             ),
           ),
 
-          // BOTTOM GREEN SHAPE (unchanged)
+          // BOTTOM GREEN SHAPE
           Positioned(
             bottom: 0,
             left: -w * 0.45,
@@ -57,9 +58,9 @@ class HomePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // HEADER
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-                  child: const Column(
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(24, 24, 24, 0),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -85,109 +86,104 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
 
-               const Spacer(),
+                const SizedBox(height: 28),
 
-/// BIG ACTION CARD (CLICKABLE, centered)
-Padding(
-  padding: const EdgeInsets.symmetric(horizontal: 24),
-  child: Align(
-    alignment: Alignment.center,
-    child: Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(18),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const CreatingPage()),
-          );
-        },
-        child: Container(
-          width: double.infinity,
-          height: 118,
-          padding: const EdgeInsets.fromLTRB(18, 18, 18, 18),
-          decoration: BoxDecoration(
-            color: const Color(0xFF2F2F2F),
-            borderRadius: BorderRadius.circular(18),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // LEFT TEXT
-              const Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Create a",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: "Inter",
-                        height: 1.0,
-                      ),
-                    ),
-                    SizedBox(height: 2),
-                    Text(
-                      "Post",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 38,
-                        fontWeight: FontWeight.w800,
-                        fontFamily: "Inter",
-                        height: 0.95,
-                      ),
-                    ),
-                    SizedBox(height: 6),
-                    Text(
-                      "post something for your page",
-                      style: TextStyle(
-                        color: Color.fromRGBO(220, 220, 220, 1),
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: "Inter",
-                        height: 1.1,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                // BIG ACTION CARD (CLICKABLE)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(18),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const CreatingPage()),
+                        );
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        height: 118,
+                        padding: const EdgeInsets.fromLTRB(18, 18, 18, 18),
+                        decoration: BoxDecoration(
+                          color: darkCard,
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Create a",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: "Inter",
+                                      height: 1.0,
+                                    ),
+                                  ),
+                                  SizedBox(height: 2),
+                                  Text(
+                                    "Post",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 38,
+                                      fontWeight: FontWeight.w800,
+                                      fontFamily: "Inter",
+                                      height: 0.95,
+                                    ),
+                                  ),
+                                  SizedBox(height: 6),
+                                  Text(
+                                    "post something for your page",
+                                    style: TextStyle(
+                                      color: Color.fromRGBO(220, 220, 220, 1),
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: "Inter",
+                                      height: 1.1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
 
-              // RIGHT ARROW BUTTON
-              Container(
-                width: 34,
-                height: 34,
-                decoration: BoxDecoration(
-                  color: const Color.fromRGBO(255, 255, 255, 0.18),
-                  borderRadius: BorderRadius.circular(12),
+                            Container(
+                              width: 34,
+                              height: 34,
+                              decoration: BoxDecoration(
+                                color: const Color.fromRGBO(255, 255, 255, 0.18),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(
+                                Icons.chevron_right,
+                                color: Colors.white,
+                                size: 22,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-                child: const Icon(
-                  Icons.chevron_right,
-                  color: Colors.white,
-                  size: 22,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ),
-  ),
-),
+
                 const Spacer(),
 
                 // SMALL CARDS
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
                   child: Row(
-                    children: const [
+                    children: [
                       Expanded(
                         child: _SmallCard(
                           titleTop: "Your",
                           titleBig: "Activity",
-                          subtitle:
-                              "see your\nprevious posts,\nstories, etc",
+                          subtitle: "see your\nprevious posts,\nstories, etc",
                         ),
                       ),
                       SizedBox(width: 14),
@@ -195,8 +191,7 @@ Padding(
                         child: _SmallCard(
                           titleTop: "Need",
                           titleBig: "Help?",
-                          subtitle:
-                              "improve your\nwork with\ntutorials and\ncourses",
+                          subtitle: "improve your\nwork with\ntutorials and\ncourses",
                         ),
                       ),
                     ],
@@ -213,47 +208,6 @@ Padding(
   }
 }
 
-// ─────────────────────────────────────────────
-// CREATING PAGE
-// ─────────────────────────────────────────────
-class CreatingPage extends StatelessWidget {
-  const CreatingPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromRGBO(235, 235, 235, 1),
-      appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(235, 235, 235, 1),
-        elevation: 0,
-        iconTheme: const IconThemeData(
-          color: Color.fromRGBO(43, 43, 43, 1),
-        ),
-        title: const Text(
-          "Creating",
-          style: TextStyle(
-            color: Color.fromRGBO(43, 43, 43, 1),
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ),
-      body: const Center(
-        child: Text(
-          "Creating page",
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
-            color: Color.fromRGBO(43, 43, 43, 1),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────
-// SMALL CARD
-// ─────────────────────────────────────────────
 class _SmallCard extends StatelessWidget {
   final String titleTop;
   final String titleBig;
