@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:coco/pages/creating_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
