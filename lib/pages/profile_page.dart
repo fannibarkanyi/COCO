@@ -13,7 +13,14 @@ class _ProfilePageState extends State<ProfilePage> {
   String email = "drmathis@kabbe.com";
   String password = "password123";
 
-  static const bg = Color.fromRGBO(235, 235, 235, 1);
+  // Keep constants OUTSIDE build (removes yellow warnings)
+  static const _iconColor = Color(0xFF2B2B2B);
+  static const _lightBg = Color(0xFFEBEBEB);
+  static const _tileBg = Color(0xFFF5F5F5);
+
+  // SVG aspect ratios (from your design)
+  static const double _topAspect = 393 / 174;
+  static const double _bottomAspect = 393 / 194;
 
   Future<void> _editField({
     required String title,
@@ -57,261 +64,242 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final w = MediaQuery.of(context).size.width;
-    final h = MediaQuery.of(context).size.height;
-
-    // Top svg sizing (same as your other pages)
-    const double svgViewBoxWidth = 393;
-    const double svgViewBoxHeight = 194;
-    final double topSvgHeight = w * (svgViewBoxHeight / svgViewBoxWidth);
-
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(235, 235, 235, 1),
+      backgroundColor: Colors.transparent, // important with AppShell + transparent nav
       body: Stack(
         children: [
           // TOP SVG
           Positioned(
-  top: 0,
-  left: 0,
-  right: 0,
-  child: AspectRatio(
-    aspectRatio: 393 / 174, // width / height from the SVG design
-    child: SvgPicture.asset(
-      'assets/profile_top.svg',
-      fit: BoxFit.cover,
-      alignment: Alignment.topLeft,
-    ),
-  ),
-),
+            top: 0,
+            left: 0,
+            right: 0,
+            child: AspectRatio(
+              aspectRatio: _topAspect,
+              child: SvgPicture.asset(
+                'assets/profile_top.svg',
+                fit: BoxFit.cover,
+                alignment: Alignment.topLeft,
+              ),
+            ),
+          ),
 
-
-          // BOTTOM GREEN SHAPE
+          // BOTTOM SVG
           Positioned(
-  left: 0,
-  right: 0,
-  bottom: 0,
-  child: AspectRatio(
-    aspectRatio: 393 / 194, // use THAT svg’s ratio
-    child: SvgPicture.asset(
-      'assets/profile_bottom.svg',
-      fit: BoxFit.cover,
-      alignment: Alignment.bottomCenter,
-    ),
-  ),
-),
-
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: AspectRatio(
+              aspectRatio: _bottomAspect,
+              child: SvgPicture.asset(
+                'assets/profile_bottom.svg',
+                fit: BoxFit.cover,
+                alignment: Alignment.bottomCenter,
+              ),
+            ),
+          ),
 
           SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Header row: "Profile" + settings icon
-                  Row(
-                    children: [
-                      const Expanded(
-                        child: Text(
-                          "Profile",
-                          style: TextStyle(
-                            fontSize: 36,
-                            fontWeight: FontWeight.w700,
-                            fontFamily: "Inter",
-                            color: Color.fromRGBO(43, 43, 43, 1),
-                          ),
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(24, 24, 24, 110), // ✅ space for nav
+              children: [
+                // Header row
+                Row(
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        "Profile",
+                        style: TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: "Inter",
+                          color: _iconColor,
                         ),
                       ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.settings),
-                        color: const Color.fromRGBO(43, 43, 43, 1),
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.settings),
+                      color: _iconColor,
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 20),
+
+                // Avatar
+                Center(
+                  child: CircleAvatar(
+                    radius: 38,
+                    backgroundColor: _lightBg,
+                    child: ClipOval(
+                      child: Image.network(
+                        "https://i.pravatar.cc/200",
+                        width: 72,
+                        height: 72,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 14),
+
+                // Name + edit
+                Center(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        name,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: "Inter",
+                          color: _iconColor,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      GestureDetector(
+                        onTap: () => _editField(
+                          title: "Edit name",
+                          initialValue: name,
+                          obscure: false,
+                          onSave: (v) => name = v,
+                        ),
+                        child: const Icon(Icons.edit, size: 18, color: _iconColor),
                       ),
                     ],
                   ),
+                ),
 
-                  const SizedBox(height: 20),
+                const SizedBox(height: 10),
 
-                  // Avatar
-                  Center(
-                    child: CircleAvatar(
-                      radius: 38,
-                      backgroundColor: const Color.fromRGBO(235, 235, 235, 1),
-                      child: ClipOval(
-                        child: Image.network(
-                          // placeholder avatar
-                          "https://i.pravatar.cc/200",
-                          width: 72,
-                          height: 72,
-                          fit: BoxFit.cover,
+                _InfoRow(
+                  label: "Email:",
+                  value: email,
+                  onEdit: () => _editField(
+                    title: "Edit email",
+                    initialValue: email,
+                    obscure: false,
+                    onSave: (v) => email = v,
+                  ),
+                ),
+
+                const SizedBox(height: 6),
+
+                _InfoRow(
+                  label: "Password:",
+                  value: maskedPassword,
+                  onEdit: () => _editField(
+                    title: "Edit password",
+                    initialValue: password,
+                    obscure: true,
+                    onSave: (v) => password = v,
+                  ),
+                ),
+
+                const SizedBox(height: 22),
+
+                const Text(
+                  "Social media",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: "Inter",
+                    color: _iconColor,
+                  ),
+                ),
+
+                const SizedBox(height: 10),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: _SocialTile(
+                        icon: Icons.camera_alt_outlined,
+                        label: "Instagram",
+                        onTap: () {},
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _SocialTile(
+                        icon: Icons.close,
+                        label: "X",
+                        onTap: () {},
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _SocialTile(
+                        icon: Icons.facebook,
+                        label: "Facebook",
+                        onTap: () {},
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _SocialTile(
+                        icon: Icons.business_center_outlined,
+                        label: "LinkedIn",
+                        onTap: () {},
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _SocialTile(
+                        icon: Icons.music_note,
+                        label: "TikTok",
+                        onTap: () {},
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _SocialTile(
+                        icon: Icons.add,
+                        label: "Add more",
+                        onTap: () {},
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 22),
+
+                // Sign out button
+                Center(
+                  child: SizedBox(
+                    width: 170,
+                    height: 52,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _iconColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      child: const Text(
+                        "Sign out",
+                        style: TextStyle(
+                          color: _lightBg,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: "Inter",
                         ),
                       ),
                     ),
                   ),
-
-                  const SizedBox(height: 14),
-
-                  // Name + edit
-                  Center(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          name,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            fontFamily: "Inter",
-                            color: Color.fromRGBO(43, 43, 43, 1),
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        GestureDetector(
-                          onTap: () => _editField(
-                            title: "Edit name",
-                            initialValue: name,
-                            obscure: false,
-                            onSave: (v) => name = v,
-                          ),
-                          child: const Icon(Icons.edit, size: 18),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // Email row
-                  _InfoRow(
-                    label: "Email:",
-                    value: email,
-                    onEdit: () => _editField(
-                      title: "Edit email",
-                      initialValue: email,
-                      obscure: false,
-                      onSave: (v) => email = v,
-                    ),
-                  ),
-
-                  const SizedBox(height: 6),
-
-                  // Password row
-                  _InfoRow(
-                    label: "Password:",
-                    value: maskedPassword,
-                    onEdit: () => _editField(
-                      title: "Edit password",
-                      initialValue: password,
-                      obscure: true,
-                      onSave: (v) => password = v,
-                    ),
-                  ),
-
-                  const SizedBox(height: 22),
-
-                  const Text(
-                    "Social media",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: "Inter",
-                      color: Color.fromRGBO(43, 43, 43, 1),
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // Social list (2 columns like your screenshot)
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _SocialTile(
-                          icon: Icons.camera_alt_outlined,
-                          label: "Instagram",
-                          onTap: () {},
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _SocialTile(
-                          icon: Icons.close,
-                          label: "X",
-                          onTap: () {},
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _SocialTile(
-                          icon: Icons.facebook,
-                          label: "Facebook",
-                          onTap: () {},
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _SocialTile(
-                          icon: Icons.business_center_outlined,
-                          label: "LinkedIn",
-                          onTap: () {},
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _SocialTile(
-                          icon: Icons.music_note,
-                          label: "TikTok",
-                          onTap: () {},
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _SocialTile(
-                          icon: Icons.add,
-                          label: "Add more",
-                          onTap: () {},
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const Spacer(),
-
-                  // Sign out button
-                  Center(
-                    child: SizedBox(
-                      width: 170,
-                      height: 52,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromRGBO(43, 43, 43, 1),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                        child: const Text(
-                          "Sign out",
-                          style: TextStyle(
-                            color: Color.fromRGBO(235, 235, 235, 1),
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            fontFamily: "Inter",
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 24),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],
@@ -331,6 +319,8 @@ class _InfoRow extends StatelessWidget {
     required this.onEdit,
   });
 
+  static const _iconColor = Color(0xFF2B2B2B);
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -343,7 +333,7 @@ class _InfoRow extends StatelessWidget {
               fontSize: 12,
               fontWeight: FontWeight.w600,
               fontFamily: "Inter",
-              color: Color.fromRGBO(43, 43, 43, 1),
+              color: _iconColor,
             ),
           ),
           const SizedBox(width: 6),
@@ -353,13 +343,13 @@ class _InfoRow extends StatelessWidget {
               fontSize: 12,
               fontWeight: FontWeight.w500,
               fontFamily: "Inter",
-              color: Color.fromRGBO(43, 43, 43, 1),
+              color: _iconColor,
             ),
           ),
           const SizedBox(width: 6),
           GestureDetector(
             onTap: onEdit,
-            child: const Icon(Icons.edit, size: 16),
+            child: const Icon(Icons.edit, size: 16, color: _iconColor),
           ),
         ],
       ),
@@ -378,10 +368,13 @@ class _SocialTile extends StatelessWidget {
     required this.onTap,
   });
 
+  static const _iconColor = Color(0xFF2B2B2B);
+  static const _tileBg = Color(0xFFF5F5F5);
+
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: const Color.fromRGBO(245, 245, 245, 1),
+      color: _tileBg,
       borderRadius: BorderRadius.circular(14),
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
@@ -391,7 +384,7 @@ class _SocialTile extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Row(
             children: [
-              Icon(icon, size: 18, color: const Color.fromRGBO(43, 43, 43, 1)),
+              Icon(icon, size: 18, color: _iconColor),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
@@ -400,11 +393,11 @@ class _SocialTile extends StatelessWidget {
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                     fontFamily: "Inter",
-                    color: Color.fromRGBO(43, 43, 43, 1),
+                    color: _iconColor,
                   ),
                 ),
               ),
-              const Icon(Icons.chevron_right, size: 18),
+              const Icon(Icons.chevron_right, size: 18, color: _iconColor),
             ],
           ),
         ),

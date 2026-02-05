@@ -12,44 +12,51 @@ class BottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const iconColor = Color.fromRGBO(43, 43, 43, 1);
+    const iconColor = Color(0xFF2B2B2B);
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 18),
-      child: Container(
-        height: 64,
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(22),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _NavItem(
-              icon: Icons.home_outlined,
-              isActive: currentIndex == 0,
-              onTap: () => onTap(0),
-              iconColor: iconColor,
+    return Material(
+      color: Colors.transparent, // kills Scaffold Material bg
+      elevation: 0,
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 0, 24, 18),
+          child: Container(
+            height: 64,
+            decoration: BoxDecoration(
+              color: Colors.transparent, // truly transparent
+              borderRadius: BorderRadius.circular(22),
             ),
-            _NavItem(
-              icon: Icons.bar_chart_outlined,
-              isActive: currentIndex == 1,
-              onTap: () => onTap(1),
-              iconColor: iconColor,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _NavItem(
+                  icon: Icons.home_outlined,
+                  isActive: currentIndex == 0,
+                  onTap: () => onTap(0),
+                  iconColor: iconColor,
+                ),
+                _NavItem(
+                  icon: Icons.bar_chart_outlined,
+                  isActive: currentIndex == 1,
+                  onTap: () => onTap(1),
+                  iconColor: iconColor,
+                ),
+                _NavItem(
+                  icon: Icons.chat_bubble_outline,
+                  isActive: currentIndex == 2,
+                  onTap: () => onTap(2),
+                  iconColor: iconColor,
+                ),
+                _NavItem(
+                  icon: Icons.person_outline,
+                  isActive: currentIndex == 3,
+                  onTap: () => onTap(3),
+                  iconColor: iconColor,
+                ),
+              ],
             ),
-            _NavItem(
-              icon: Icons.chat_bubble_outline,
-              isActive: currentIndex == 2,
-              onTap: () => onTap(2),
-              iconColor: iconColor,
-            ),
-            _NavItem(
-              icon: Icons.person_outline,
-              isActive: currentIndex == 3,
-              onTap: () => onTap(3),
-              iconColor: iconColor,
-            ),
-          ],
+          ),
         ),
       ),
     );

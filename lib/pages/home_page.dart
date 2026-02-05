@@ -19,7 +19,7 @@ class HomePage extends StatelessWidget {
     const darkCard = Color(0xFF2F2F2F);
 
     return Scaffold(
-      backgroundColor: bg,
+      backgroundColor: Colors.transparent,
       body: Stack(
         children: [
           // TOP SVG
@@ -86,7 +86,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 28),
+                const Spacer(),
 
                 // BIG ACTION CARD (CLICKABLE)
                 Padding(
@@ -222,7 +222,7 @@ class _SmallCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: const BoxConstraints(minHeight: 170),
+      height: 190,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: const Color.fromRGBO(245, 245, 245, 1),
