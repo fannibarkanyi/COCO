@@ -109,7 +109,7 @@ class StatisticsPage extends StatelessWidget {
                             children: const [
                               Expanded(
                                 child: _StatCard(
-                                  bigText: "856",
+                                  bigText: "0",
                                   label: "Followers",
                                   icon: Icons.person_add_alt_1_outlined,
                                 ),
@@ -117,7 +117,7 @@ class StatisticsPage extends StatelessWidget {
                               SizedBox(width: 14),
                               Expanded(
                                 child: _StatCard(
-                                  bigText: "67",
+                                  bigText: "0",
                                   label: "Posts",
                                   icon: Icons.description_outlined,
                                 ),
@@ -129,7 +129,7 @@ class StatisticsPage extends StatelessWidget {
                             children: const [
                               Expanded(
                                 child: _StatCard(
-                                  bigText: "2,1k",
+                                  bigText: "0",
                                   label: "Views",
                                   icon: Icons.remove_red_eye_outlined,
                                 ),
@@ -137,7 +137,7 @@ class StatisticsPage extends StatelessWidget {
                               SizedBox(width: 14),
                               Expanded(
                                 child: _StatCard(
-                                  bigText: "1,8k",
+                                  bigText: "0",
                                   label: "Likes",
                                   icon: Icons.thumb_up_alt_outlined,
                                 ),
