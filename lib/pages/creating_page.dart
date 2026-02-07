@@ -112,11 +112,15 @@ Future<void> _pickFromGallery() async {
   }
 
   void _goToPostDetails() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const PostDetailsPage()),
-    );
-  }
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => PostDetailsPage(
+        imagePath: _selectedImage?.path ?? "",
+      ),
+    ),
+  );
+}
 
   void _onNext() {
     if (!hasUploadedPhoto) {

@@ -7,7 +7,12 @@ import 'post_preview.dart';
 
 
 class PostDetailsPage extends StatefulWidget {
-  const PostDetailsPage({super.key});
+  const PostDetailsPage({
+    super.key,
+    required this.imagePath,
+  });
+
+  final String imagePath;
 
   @override
   State<PostDetailsPage> createState() => _PostDetailsPageState();
@@ -229,7 +234,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
 
                   const SizedBox(height: 22),
 
-                  // Next button centered like mock
+                  // NEXT BUTTON 
                   Center(
                     child: SizedBox(
                       width: mathMin(160.0, w * 0.46),
@@ -240,7 +245,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
     context,
     MaterialPageRoute(
       builder: (_) => PostPreviewChoosePage(
-        imagePath: "", // next step we’ll pass the picked image path
+        imagePath: widget.imagePath, // ✅ PASS IMAGE HERE
         caption: captionCtrl.text.trim(),
         description: descCtrl.text.trim(),
         location: locationCtrl.text.trim(),

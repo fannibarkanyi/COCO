@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -9,22 +14,88 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  // ✅ Demo “already signed in” user id (no auth flow)
+  static const String _uid = "demo-user";
+
+  // Local UI state (synced with Firestore)
   String name = "Dr Maria Sofia Mathis";
   String email = "drmathis@kabbe.com";
   String password = "password123";
+  String? photoUrl;
+
+  bool _loading = true;
 
   static const _iconColor = Color(0xFF2B2B2B);
   static const _lightBg = Color(0xFFEBEBEB);
 
-  // SVG aspect ratios (from your design)
+  // SVG aspect ratios
   static const double _topAspect = 393 / 174;
-  static const double _bottomAspect = 393 / 194; // ✅ fixed
+  static const double _bottomAspect = 393 / 194;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfile();
+  }
+
+  DocumentReference<Map<String, dynamic>> get _userDoc =>
+      FirebaseFirestore.instance.collection('users').doc(_uid);
+
+  Future<void> _loadProfile() async {
+    try {
+      final snap = await _userDoc.get();
+
+      if (snap.exists) {
+        final data = snap.data()!;
+        setState(() {
+          name = (data['displayName'] as String?) ?? name;
+          email = (data['email'] as String?) ?? email;
+          password = (data['password'] as String?) ?? password; // demo only
+          photoUrl = data['photoUrl'] as String?;
+        });
+      } else {
+        // Create initial profile doc
+        await _userDoc.set({
+          'displayName': name,
+          'email': email,
+          'password': password, // demo only
+          'photoUrl': null,
+          'social': {
+            'instagram': '',
+            'facebook': '',
+            'tiktok': '',
+            'x': '',
+            'linkedin': '',
+          },
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Profile load failed: $e")),
+      );
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _updateProfile(Map<String, dynamic> updates) async {
+    await _userDoc.set(
+      {
+        ...updates,
+        'updatedAt': FieldValue.serverTimestamp(),
+      },
+      SetOptions(merge: true),
+    );
+  }
 
   Future<void> _editField({
     required String title,
     required String initialValue,
     required bool obscure,
-    required void Function(String v) onSave,
+    required void Function(String v) applyLocal,
+    required Map<String, dynamic> Function(String v) firestoreUpdate,
   }) async {
     final controller = TextEditingController(text: initialValue);
 
@@ -36,9 +107,7 @@ class _ProfilePageState extends State<ProfilePage> {
         content: TextField(
           controller: controller,
           obscureText: obscure,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-          ),
+          decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         actions: [
           TextButton(
@@ -53,12 +122,52 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
 
-    if (result != null && result.isNotEmpty) {
-      setState(() => onSave(result));
+    if (result == null || result.isEmpty) return;
+
+    try {
+      setState(() => applyLocal(result));
+      await _updateProfile(firestoreUpdate(result));
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Save failed: $e")),
+      );
     }
   }
 
   String get maskedPassword => "•" * (password.length.clamp(8, 12));
+
+  Future<void> _pickAndUploadAvatar() async {
+    try {
+      final picker = ImagePicker();
+      final picked = await picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 85,
+      );
+      if (picked == null) return;
+
+      setState(() => _loading = true);
+
+      final file = File(picked.path);
+
+      // ✅ Unique path so caching won’t fight you
+      final filename = "avatar_${DateTime.now().millisecondsSinceEpoch}.jpg";
+      final ref = FirebaseStorage.instance.ref().child('users/$_uid/$filename');
+
+      await ref.putFile(file);
+      final url = await ref.getDownloadURL();
+
+      await _updateProfile({'photoUrl': url});
+      setState(() => photoUrl = url);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Upload failed: $e")),
+      );
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,21 +178,17 @@ class _ProfilePageState extends State<ProfilePage> {
           final w = constraints.maxWidth;
           final h = constraints.maxHeight;
 
-          // Height of each SVG based on screen width and aspect ratio
           final topSvgH = w / _topAspect;
           final bottomSvgH = w / _bottomAspect;
 
-          // Avatar sizing
           const avatarRadius = 36.0;
-          final avatarTop = topSvgH - avatarRadius; // ✅ center hits bottom of top svg
+          final avatarTop = topSvgH - avatarRadius;
 
-          // Sign out button sizing
           const btnW = 167.0;
           const btnH = 62.0;
           final bottomSvgTopY = h - bottomSvgH;
-          final signOutTop = bottomSvgTopY - (btnH / 2); // ✅ center hits top of bottom svg
+          final signOutTop = bottomSvgTopY - (btnH / 2);
 
-          // Content spacing (keep content between avatar and signout)
           final contentTop = avatarTop + (avatarRadius * 2) + 14;
           final contentBottom = (h - signOutTop) + 12;
 
@@ -119,14 +224,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
 
-              // ✅ CONTENT ONLY in SafeArea (NOT avatar/signout)
+              // CONTENT
               SafeArea(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(24, 24, 24, contentBottom),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Header row
                       Row(
                         children: [
                           const Expanded(
@@ -148,7 +252,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         ],
                       ),
 
-                      // Push content to start BELOW avatar overlay
                       SizedBox(height: (contentTop - 24 - 56).clamp(0, 9999)),
 
                       // Name + edit
@@ -171,9 +274,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                 title: "Edit name",
                                 initialValue: name,
                                 obscure: false,
-                                onSave: (v) => name = v,
+                                applyLocal: (v) => name = v,
+                                firestoreUpdate: (v) => {'displayName': v},
                               ),
-                              child: const Icon(Icons.edit, size: 18, color: _iconColor),
+                              child: const Icon(Icons.edit,
+                                  size: 18, color: _iconColor),
                             ),
                           ],
                         ),
@@ -188,7 +293,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           title: "Edit email",
                           initialValue: email,
                           obscure: false,
-                          onSave: (v) => email = v,
+                          applyLocal: (v) => email = v,
+                          firestoreUpdate: (v) => {'email': v},
                         ),
                       ),
 
@@ -201,7 +307,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           title: "Edit password",
                           initialValue: password,
                           obscure: true,
-                          onSave: (v) => password = v,
+                          applyLocal: (v) => password = v,
+                          firestoreUpdate: (v) => {'password': v}, // demo only
                         ),
                       ),
 
@@ -219,7 +326,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
                       const SizedBox(height: 14),
 
-                      // SOCIAL SECTION (two columns + vertical divider)
                       IntrinsicHeight(
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -228,24 +334,20 @@ class _ProfilePageState extends State<ProfilePage> {
                               child: Column(
                                 children: [
                                   _SocialTile(
-                                    icon: Icons.camera_alt_outlined,
-                                    label: "Instagram",
-                                    onTap: () {},
-                                  ),
+                                      icon: Icons.camera_alt_outlined,
+                                      label: "Instagram",
+                                      onTap: () {}),
                                   _SocialTile(
-                                    icon: Icons.facebook,
-                                    label: "Facebook",
-                                    onTap: () {},
-                                  ),
+                                      icon: Icons.facebook,
+                                      label: "Facebook",
+                                      onTap: () {}),
                                   _SocialTile(
-                                    icon: Icons.music_note,
-                                    label: "TikTok",
-                                    onTap: () {},
-                                  ),
+                                      icon: Icons.music_note,
+                                      label: "TikTok",
+                                      onTap: () {}),
                                 ],
                               ),
                             ),
-
                             const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 14),
                               child: VerticalDivider(
@@ -254,25 +356,19 @@ class _ProfilePageState extends State<ProfilePage> {
                                 color: _iconColor,
                               ),
                             ),
-
                             Expanded(
                               child: Column(
                                 children: [
                                   _SocialTile(
-                                    icon: Icons.close,
-                                    label: "X",
-                                    onTap: () {},
-                                  ),
+                                      icon: Icons.close, label: "X", onTap: () {}),
                                   _SocialTile(
-                                    icon: Icons.business_center_outlined,
-                                    label: "LinkedIn",
-                                    onTap: () {},
-                                  ),
+                                      icon: Icons.business_center_outlined,
+                                      label: "LinkedIn",
+                                      onTap: () {}),
                                   _SocialTile(
-                                    icon: Icons.add_box_outlined,
-                                    label: "Add more",
-                                    onTap: () {},
-                                  ),
+                                      icon: Icons.add_box_outlined,
+                                      label: "Add more",
+                                      onTap: () {}),
                                 ],
                               ),
                             ),
@@ -284,28 +380,25 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
 
-              // ✅ AVATAR aligned in same coordinate system as SVGs
+              // AVATAR (tap to change)
               Positioned(
                 top: avatarTop,
                 left: 0,
                 right: 0,
                 child: Center(
-                  child: CircleAvatar(
-                    radius: avatarRadius,
-                    backgroundColor: _lightBg,
-                    child: ClipOval(
-                      child: Image.asset(
-                        'assets/profile_pic.png',
-                        width: 72,
-                        height: 72,
-                        fit: BoxFit.cover,
-                      ),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(999),
+                    onTap: _loading ? null : _pickAndUploadAvatar,
+                    child: CircleAvatar(
+                      radius: avatarRadius,
+                      backgroundColor: _lightBg,
+                      child: ClipOval(child: _buildAvatarImage()),
                     ),
                   ),
                 ),
               ),
 
-              // ✅ SIGN OUT aligned in same coordinate system as SVGs
+              // Sign out (for show)
               Positioned(
                 top: signOutTop,
                 left: 0,
@@ -336,10 +429,44 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ),
+
+              if (_loading)
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: Container(
+                      // ignore: deprecated_member_use
+                      color: Colors.black.withOpacity(0.05),
+                      child: const Center(child: CircularProgressIndicator()),
+                    ),
+                  ),
+                ),
             ],
           );
         },
       ),
+    );
+  }
+
+  Widget _buildAvatarImage() {
+    if (photoUrl != null && photoUrl!.isNotEmpty) {
+      return Image.network(
+        photoUrl!,
+        width: 72,
+        height: 72,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => Image.asset(
+          'assets/profile_pic.png',
+          width: 72,
+          height: 72,
+          fit: BoxFit.cover,
+        ),
+      );
+    }
+    return Image.asset(
+      'assets/profile_pic.png',
+      width: 72,
+      height: 72,
+      fit: BoxFit.cover,
     );
   }
 }

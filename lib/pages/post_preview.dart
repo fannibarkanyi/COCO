@@ -1,5 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:io';
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -9,7 +12,7 @@ import 'app_shell.dart';
 class PostPreviewChoosePage extends StatefulWidget {
   const PostPreviewChoosePage({
     super.key,
-    required this.imagePath, // can be '' for now if you’re not passing it yet
+    required this.imagePath, // can be '' for now
     required this.caption,
     required this.description,
     required this.location,
@@ -53,33 +56,63 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
     }
   }
 
-  // Placeholder “preview box” size depends on selected type
-  Size _previewSize(double w, double h) {
-    final cardW = (w * 0.55).clamp(210.0, 260.0);
-    if (selected == 0) {
-      // story: taller
-      return Size(cardW, (h * 0.42).clamp(300.0, 420.0));
-    }
-    if (selected == 1) {
-      // post: medium
-      return Size(cardW, (h * 0.30).clamp(220.0, 320.0));
-    }
-    // blog: shorter, wider feel
-    return Size(cardW, (h * 0.26).clamp(200.0, 280.0));
+  /// ✅ Max width like the mock
+  double _previewWidth(double screenW) {
+    return math.min(screenW * 0.72, 320.0);
   }
+
+  /// ✅ Aspect ratios by mode
+  /// Story: 9/16 (tall)
+  /// Post: 4/5 (feed-ish)
+  /// Blog: 3/4 (still tall, room for text)
+  double get _previewAspect {
+    if (selected == 0) return 9 / 16;
+    if (selected == 1) return 4 / 5;
+    return 3 / 4;
+  }
+
+ Widget _buildPreview() {
+  const username = "User_Name";
+
+  switch (selected) {
+    case 0:
+      return StoryPreview(
+        username: username,
+        imagePath: widget.imagePath,
+        caption: widget.caption,
+        location: widget.location,
+        music: widget.music,
+      );
+    case 1:
+      return PostPreview(
+  username: username,
+  imagePath: widget.imagePath,
+  caption: widget.caption,
+  description: widget.description,
+  location: widget.location,
+);
+    default:
+      return BlogPreview(
+        username: username,
+        imagePath: widget.imagePath,
+        title: widget.caption,
+        body: widget.description,
+      );
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context);
     final w = media.size.width;
-    final h = media.size.height;
 
     // bottom svg size
     const double svgViewBoxW = 393;
     const double svgViewBoxH = 448;
     final double bottomSvgHeight = w * (svgViewBoxH / svgViewBoxW);
 
-    final preview = _previewSize(w, h);
+    final aspect = _previewAspect;
 
     return Scaffold(
       extendBody: true,
@@ -94,18 +127,18 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
 
           // BOTTOM SVG
           Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: SizedBox(
-                  height: bottomSvgHeight,
-                  child: SvgPicture.asset(
-                    'assets/preview_bottom.svg',
-                    fit: BoxFit.cover,
-                    alignment: Alignment.bottomCenter,
-                  ),
-                ),
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: SizedBox(
+              height: bottomSvgHeight,
+              child: SvgPicture.asset(
+                'assets/preview_bottom.svg',
+                fit: BoxFit.cover,
+                alignment: Alignment.bottomCenter,
               ),
+            ),
+          ),
 
           SafeArea(
             child: Padding(
@@ -143,7 +176,7 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
 
                   const SizedBox(height: 12),
 
-                  // Segmented buttons: Story / Post / Blog
+                  // Segmented buttons
                   _SegmentedTabs(
                     selectedIndex: selected,
                     onChanged: (i) => setState(() => selected = i),
@@ -151,19 +184,26 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
 
                   const SizedBox(height: 16),
 
-                  // Preview area
+                  // ✅ Preview area (ratio always preserved)
                   Expanded(
-                    child: Center(
-                      child: SizedBox(
-                        width: preview.width,
-                        height: preview.height,
-                        child: _PreviewCardSkeleton(
-                          mode: selected,
-                          imagePath: widget.imagePath,
-                          caption: widget.caption,
-                          description: widget.description,
-                        ),
-                      ),
+                    child: LayoutBuilder(
+                      builder: (context, c) {
+                        final maxW = _previewWidth(w);
+
+                        // height = width / aspect  =>  width = height * aspect
+                        final maxWFromHeight = c.maxHeight * aspect;
+                        final cardW = math.min(maxW, maxWFromHeight);
+
+                        return Center(
+                          child: SizedBox(
+                            width: cardW,
+                            child: AspectRatio(
+                              aspectRatio: aspect,
+                              child: _buildPreview(),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
 
@@ -193,8 +233,7 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
                       height: 42,
                       child: ElevatedButton(
                         onPressed: () {
-                          // skeleton: do nothing for now
-                          // later: create the post in backend and navigate to success page
+                          // later: create post + go to activity page etc
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: _iconColor,
@@ -278,136 +317,491 @@ class _SegmentedTabs extends StatelessWidget {
   }
 }
 
-class _PreviewCardSkeleton extends StatelessWidget {
-  const _PreviewCardSkeleton({
-    required this.mode,
+/// ==============================
+// STORY PREVIEW
+
+class StoryPreview extends StatelessWidget {
+  const StoryPreview({
+    super.key,
+    required this.username,
+    required this.imagePath,
+    required this.caption,
+    required this.location,
+    required this.music,
+  });
+
+  final String username;
+  final String imagePath;
+  final String caption;
+  final String location;
+  final String music;
+
+  @override
+  Widget build(BuildContext context) {
+    final hasMusic = music.trim().isNotEmpty;
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(14),
+      child: Stack(
+        children: [
+          // image
+          Positioned.fill(child: _PreviewImage(imagePath: imagePath)),
+
+          // ✅ top bar: avatar + username + song under username
+          Positioned(
+            top: 10,
+            left: 10,
+            right: 10,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const CircleAvatar(
+                  radius: 14,
+                  backgroundColor: Colors.white,
+                  child: CircleAvatar(
+                    radius: 13,
+                    backgroundImage: AssetImage('assets/profile_pic.png'),
+                  ),
+                ),
+                const SizedBox(width: 8),
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        username,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: "Inter",
+                          fontSize: 12,
+                          shadows: [Shadow(blurRadius: 8, color: Colors.black54)],
+                        ),
+                      ),
+
+                      if (hasMusic) ...[
+                        const SizedBox(height: 2),
+                        Row(
+                          children: [
+                            const Icon(Icons.music_note, size: 12, color: Colors.white),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                music,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: "Inter",
+                                  fontSize: 11,
+                                  shadows: [Shadow(blurRadius: 8, color: Colors.black54)],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+
+                const SizedBox(width: 8),
+                const Icon(Icons.more_horiz, color: Colors.white),
+              ],
+            ),
+          ),
+
+          // caption/details overlay
+          Positioned(
+            left: 14,
+            right: 14,
+            bottom: 70,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (caption.trim().isNotEmpty)
+                  Text(
+                    caption,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                      fontFamily: "Inter",
+                      shadows: [Shadow(blurRadius: 10, color: Colors.black)],
+                    ),
+                  ),
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    if (location.trim().isNotEmpty) ...[
+                      const Icon(Icons.location_on, size: 14, color: Colors.white),
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          location,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: "Inter",
+                            shadows: [Shadow(blurRadius: 10, color: Colors.black)],
+                          ),
+                        ),
+                      ),
+                    ],
+                    // (optional) keep the bottom row music if you still want it there:
+                    // if (location.trim().isNotEmpty && music.trim().isNotEmpty)
+                    //   const SizedBox(width: 10),
+                    // if (music.trim().isNotEmpty) ...[
+                    //   const Icon(Icons.music_note, size: 14, color: Colors.white),
+                    //   const SizedBox(width: 4),
+                    //   Flexible(
+                    //     child: Text(
+                    //       music,
+                    //       overflow: TextOverflow.ellipsis,
+                    //       style: const TextStyle(
+                    //         color: Colors.white,
+                    //         fontSize: 12,
+                    //         fontWeight: FontWeight.w700,
+                    //         fontFamily: "Inter",
+                    //         shadows: [Shadow(blurRadius: 10, color: Colors.black)],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ],
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          // bottom bar
+          Positioned(
+            left: 12,
+            right: 12,
+            bottom: 12,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 34,
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.18),
+                      borderRadius: BorderRadius.circular(22),
+                      border: Border.all(color: Colors.white.withOpacity(0.35)),
+                    ),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Send message",
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.95),
+                        fontSize: 12,
+                        fontFamily: "Inter",
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                const Icon(Icons.favorite_border, color: Colors.white),
+                const SizedBox(width: 10),
+                const Icon(Icons.send, color: Colors.white),
+              ],
+            ),
+          ),
+
+          // readability gradient
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black.withOpacity(0.25),
+                    Colors.transparent,
+                    Colors.black.withOpacity(0.35),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+// POST PREVIEW
+
+class PostPreview extends StatelessWidget {
+  const PostPreview({
+    super.key,
+    required this.username,
     required this.imagePath,
     required this.caption,
     required this.description,
+    required this.location,
   });
 
-  final int mode;
+  final String username;
   final String imagePath;
   final String caption;
   final String description;
+  final String location;
 
   static const _iconColor = Color(0xFF2B2B2B);
 
   @override
   Widget build(BuildContext context) {
-    // This is intentionally a “fake preview”.
-    // Next step we can replace this with real layouts + image render.
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFE6E6E6),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: _iconColor.withOpacity(0.25), width: 1),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: mode == 0
-            ? _StoryPreviewSkeleton()
-            : mode == 1
-                ? _PostPreviewSkeleton()
-                : _BlogPreviewSkeleton(),
-      ),
-    );
-  }
-}
+    final hasLocation = location.trim().isNotEmpty;
+    final hasDescription = description.trim().isNotEmpty;
 
-class _StoryPreviewSkeleton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // “story top bar”
-        Row(
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(14),
+      child: Container(
+        color: const Color(0xFFF2F2F2),
+        child: Column(
           children: [
-            const CircleAvatar(radius: 10, backgroundColor: Colors.white),
-            const SizedBox(width: 8),
+            // Header row (avatar + username + optional location)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const CircleAvatar(
+                    radius: 12,
+                    backgroundImage: AssetImage('assets/profile_pic.png'),
+                  ),
+                  const SizedBox(width: 8),
+
+                  // username + location stacked
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          username,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: "Inter",
+                            color: _iconColor,
+                            height: 1.1,
+                          ),
+                        ),
+                        if (hasLocation) ...[
+                          const SizedBox(height: 2),
+                          Text(
+                            location,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 10.5,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: "Inter",
+                              color: _iconColor.withOpacity(0.75),
+                              height: 1.1,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+
+                  const Icon(Icons.more_horiz, color: _iconColor),
+                ],
+              ),
+            ),
+
+            // Image
             Expanded(
-              child: Container(height: 10, color: Colors.white.withOpacity(0.9)),
+              child: _PreviewImage(imagePath: imagePath),
+            ),
+
+            // Icons + caption + description
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: const [
+                      Icon(Icons.favorite_border, size: 18, color: _iconColor),
+                      SizedBox(width: 10),
+                      Icon(Icons.chat_bubble_outline, size: 18, color: _iconColor),
+                      SizedBox(width: 10),
+                      Icon(Icons.send, size: 18, color: _iconColor),
+                      Spacer(),
+                      Icon(Icons.bookmark_border, size: 18, color: _iconColor),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+
+                  Text(
+                    caption.isEmpty ? "Your caption..." : caption,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: "Inter",
+                      color: _iconColor,
+                      height: 1.25,
+                    ),
+                  ),
+
+                  if (hasDescription) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      description,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 10.8,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: "Inter",
+                        color: _iconColor.withOpacity(0.85),
+                        height: 1.25,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
             ),
           ],
         ),
-        const SizedBox(height: 10),
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.75),
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
-        // “icons row”
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(
-            4,
-            (_) => Container(width: 16, height: 16, color: Colors.white.withOpacity(0.9)),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
 
-class _PostPreviewSkeleton extends StatelessWidget {
+
+// BLOG PREVIEW
+
+class BlogPreview extends StatelessWidget {
+  const BlogPreview({
+    super.key,
+    required this.username,
+    required this.imagePath,
+    required this.title,
+    required this.body,
+  });
+
+  final String username;
+  final String imagePath;
+  final String title;
+  final String body;
+
+  static const _iconColor = Color(0xFF2B2B2B);
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // “header”
-        Row(
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(14),
+      child: Container(
+        color: const Color(0xFFF2F2F2),
+        child: Column(
           children: [
-            const CircleAvatar(radius: 10, backgroundColor: Colors.white),
-            const SizedBox(width: 8),
-            Expanded(child: Container(height: 10, color: Colors.white.withOpacity(0.9))),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.75),
-              borderRadius: BorderRadius.circular(10),
+            // image header
+            Expanded(
+              flex: 4,
+              child: _PreviewImage(imagePath: imagePath),
             ),
-          ),
-        ),
-        const SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(width: 60, height: 10, color: Colors.white.withOpacity(0.9)),
-            Container(width: 16, height: 16, color: Colors.white.withOpacity(0.9)),
+
+            // blog content
+            Expanded(
+              flex: 3,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title.isEmpty ? "Headline" : title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        fontFamily: "Inter",
+                        color: _iconColor,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Expanded(
+                      child: Text(
+                        body.isEmpty ? "Your blog text..." : body,
+                        maxLines: 6,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 10.5,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: "Inter",
+                          color: _iconColor,
+                          height: 1.25,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: const [
+                        Icon(Icons.favorite_border, size: 16, color: _iconColor),
+                        SizedBox(width: 10),
+                        Icon(Icons.chat_bubble_outline, size: 16, color: _iconColor),
+                        Spacer(),
+                        Icon(Icons.bookmark_border, size: 16, color: _iconColor),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
-      ],
+      ),
     );
   }
 }
 
-class _BlogPreviewSkeleton extends StatelessWidget {
+/// Shared image widget: shows placeholder if no image yet
+class _PreviewImage extends StatelessWidget {
+  const _PreviewImage({required this.imagePath});
+
+  final String imagePath;
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.75),
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
+    if (imagePath.isEmpty) {
+      return Container(
+        color: const Color(0xFFE0E0E0),
+        child: const Center(
+          child: Icon(Icons.image, size: 60, color: Color(0xFFB0B0B0)),
         ),
-        const SizedBox(height: 10),
-        Container(height: 10, width: double.infinity, color: Colors.white.withOpacity(0.9)),
-        const SizedBox(height: 6),
-        Container(height: 10, width: double.infinity, color: Colors.white.withOpacity(0.9)),
-        const SizedBox(height: 6),
-        Container(height: 10, width: double.infinity, color: Colors.white.withOpacity(0.9)),
-      ],
+      );
+    }
+
+    // if you pass local file paths from image_picker
+    final file = File(imagePath);
+    return Image.file(
+      file,
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) => Container(
+        color: const Color(0xFFE0E0E0),
+        child: const Center(
+          child: Icon(Icons.broken_image, size: 50, color: Color(0xFFB0B0B0)),
+        ),
+      ),
     );
   }
 }
