@@ -10,153 +10,137 @@ class StatisticsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final m = MediaQuery.of(context);
+    final w = m.size.width;
+    final h = m.size.height;
+
+    double clamp(double v, double min, double max) => v.clamp(min, max);
+
+    final sidePad = clamp(w * 0.05, 18, 24);
+    final gridGap = clamp(w * 0.035, 12, 16);
+    final bottomSpace = clamp(h * 0.16, 110, 140);
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          // White base
           const Positioned.fill(child: ColoredBox(color: Colors.white)),
 
-          // Green curved background like your screenshot
+          // Green background curve
           Positioned.fill(
-            child: ClipPath(
-              clipper: _GreenCurveClipper(),
-              child: const ColoredBox(color: _green),
+            child: CustomPaint(
+              painter: _StatsGreenPainter(color: _green),
             ),
           ),
 
           SafeArea(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 110),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: constraints.maxHeight - 110),
-                    child: IntrinsicHeight(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Header
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Expanded(
-                                child: Text(
-                                  "Statistics",
-                                  style: TextStyle(
-                                    fontSize: 34,
-                                    fontWeight: FontWeight.w900,
-                                    color: _text,
-                                    height: 1.05,
-                                  ),
-                                ),
-                              ),
-                              _MonthDropdown(label: "Last month", onTap: () {}),
-                            ],
+            child: SingleChildScrollView(
+              padding: EdgeInsets.fromLTRB(sidePad, 16, sidePad, bottomSpace),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header row
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "Statistics",
+                          style: TextStyle(
+                            fontSize: clamp(w * 0.09, 30, 40),
+                            fontWeight: FontWeight.w900,
+                            color: _text,
+                            height: 1.05,
                           ),
-
-                          const SizedBox(height: 14),
-
-                          // Horizontal scroll app row
-                          SizedBox(
-                            height: 44,
-                            child: ListView(
-                              scrollDirection: Axis.horizontal,
-                              children: const [
-                                _AppChip(
-                                  label: "Overview",
-                                  selected: true,
-                                  icon: Icons.bar_chart_rounded,
-                                ),
-                                SizedBox(width: 10),
-                                _AppChip(
-                                  label: "Instagram",
-                                  selected: false,
-                                  icon: Icons.camera_alt_outlined,
-                                ),
-                                SizedBox(width: 10),
-                                _AppChip(
-                                  label: "Facebook",
-                                  selected: false,
-                                  icon: Icons.facebook,
-                                ),
-                                SizedBox(width: 10),
-                                _AppChip(
-                                  label: "TikTok",
-                                  selected: false,
-                                  icon: Icons.music_note_outlined,
-                                ),
-                                SizedBox(width: 10),
-                                _AppChip(
-                                  label: "LinkedIn",
-                                  selected: false,
-                                  icon: Icons.business_center_outlined,
-                                ),
-                                SizedBox(width: 10),
-                                _AppChip(
-                                  label: "X",
-                                  selected: false,
-                                  icon: Icons.close,
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          const SizedBox(height: 14),
-
-                          // Stats grid
-                          Row(
-                            children: const [
-                              Expanded(
-                                child: _StatCard(
-                                  bigText: "0",
-                                  label: "Followers",
-                                  icon: Icons.person_add_alt_1_outlined,
-                                ),
-                              ),
-                              SizedBox(width: 14),
-                              Expanded(
-                                child: _StatCard(
-                                  bigText: "0",
-                                  label: "Posts",
-                                  icon: Icons.description_outlined,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 14),
-                          Row(
-                            children: const [
-                              Expanded(
-                                child: _StatCard(
-                                  bigText: "0",
-                                  label: "Views",
-                                  icon: Icons.remove_red_eye_outlined,
-                                ),
-                              ),
-                              SizedBox(width: 14),
-                              Expanded(
-                                child: _StatCard(
-                                  bigText: "0",
-                                  label: "Likes",
-                                  icon: Icons.thumb_up_alt_outlined,
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          const SizedBox(height: 14),
-
-                          // ✅ Now Spacer is safe because IntrinsicHeight gives bounded height
-                          const Spacer(),
-
-                          const _DiscoveryCard(),
-                        ],
+                        ),
                       ),
+                      _MonthDropdown(label: "Last month", onTap: () {}),
+                    ],
+                  ),
+
+                  const SizedBox(height: 14),
+
+                  // Chips row
+                  SizedBox(
+                    height: 46,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: const [
+                        _AppChip(
+                          label: "Overview",
+                          selected: true,
+                          icon: Icons.bar_chart_rounded,
+                        ),
+                        SizedBox(width: 10),
+                        _AppChip(
+                          label: "instagram",
+                          selected: false,
+                          icon: Icons.camera_alt_outlined,
+                        ),
+                        SizedBox(width: 10),
+                        _AppChip(
+                          label: "Facebook",
+                          selected: false,
+                          icon: Icons.facebook,
+                        ),
+                        SizedBox(width: 10),
+                        _AppChip(
+                          label: "TikTok",
+                          selected: false,
+                          icon: Icons.music_note_outlined,
+                        ),
+                      ],
                     ),
                   ),
-                );
-              },
+
+                  const SizedBox(height: 18),
+
+                  // Stats grid (taller cards)
+                  Row(
+                    children: [
+                      const Expanded(
+                        child: _StatCard(
+                          bigText: "0",
+                          label: "Followers",
+                          icon: Icons.person_add_alt_1_outlined,
+                        ),
+                      ),
+                      SizedBox(width: gridGap),
+                      const Expanded(
+                        child: _StatCard(
+                          bigText: "0",
+                          label: "Posts",
+                          icon: Icons.description_outlined,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: gridGap),
+                  Row(
+                    children: [
+                      const Expanded(
+                        child: _StatCard(
+                          bigText: "0",
+                          label: "Views",
+                          icon: Icons.remove_red_eye_outlined,
+                        ),
+                      ),
+                      SizedBox(width: gridGap),
+                      const Expanded(
+                        child: _StatCard(
+                          bigText: "0",
+                          label: "Likes",
+                          icon: Icons.thumb_up_alt_outlined,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  const _DiscoveryCard(),
+                ],
+              ),
             ),
           ),
         ],
@@ -165,11 +149,13 @@ class StatisticsPage extends StatelessWidget {
   }
 }
 
+/* ---------------- Dropdown ---------------- */
+
 class _MonthDropdown extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
 
-  const _MonthDropdown({required this.label, required this.onTap});
+  const _MonthDropdown({required this.label, required this.onTap, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -198,6 +184,8 @@ class _MonthDropdown extends StatelessWidget {
   }
 }
 
+/* ---------------- Chips ---------------- */
+
 class _AppChip extends StatelessWidget {
   final String label;
   final bool selected;
@@ -207,28 +195,27 @@ class _AppChip extends StatelessWidget {
     required this.label,
     required this.selected,
     required this.icon,
+    super.key,
   });
-
-  static const Color _chipSelected = Color(0xFF4FAE56);
 
   @override
   Widget build(BuildContext context) {
-    final bg = selected ? _chipSelected : Colors.white;
+    final bg = selected ? StatisticsPage._chipSelected : Colors.white;
     final fg = selected ? Colors.white : const Color(0xFF2A2A2A);
     final border = selected ? Colors.transparent : const Color(0x22000000);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: border),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 16, color: fg),
-          const SizedBox(width: 7),
+          const SizedBox(width: 8),
           Text(
             label,
             style: TextStyle(
@@ -243,6 +230,8 @@ class _AppChip extends StatelessWidget {
   }
 }
 
+/* ---------------- Stat Card ---------------- */
+
 class _StatCard extends StatelessWidget {
   final String bigText;
   final String label;
@@ -252,16 +241,22 @@ class _StatCard extends StatelessWidget {
     required this.bigText,
     required this.label,
     required this.icon,
+    super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    final w = MediaQuery.of(context).size.width;
+
+    // ✅ must be double
+    final double cardHeight = (w * 0.45).clamp(165, 190).toDouble();
+
     return Container(
-      height: 132,
-      padding: const EdgeInsets.all(14),
+      height: cardHeight,
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: StatisticsPage._card,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(18),
       ),
       child: Stack(
         children: [
@@ -270,7 +265,7 @@ class _StatCard extends StatelessWidget {
             child: Text(
               bigText,
               style: const TextStyle(
-                fontSize: 42,
+                fontSize: 48,
                 fontWeight: FontWeight.w900,
                 color: StatisticsPage._text,
                 height: 1.0,
@@ -298,16 +293,20 @@ class _StatCard extends StatelessWidget {
   }
 }
 
+/* ---------------- Discovery Card ---------------- */
+
 class _DiscoveryCard extends StatelessWidget {
-  const _DiscoveryCard();
+  const _DiscoveryCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final w = MediaQuery.of(context).size.width;
+
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: StatisticsPage._card,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(18),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -315,12 +314,12 @@ class _DiscoveryCard extends StatelessWidget {
           const Text(
             "Profile Discovery",
             style: TextStyle(
-              fontSize: 13,
+              fontSize: 14,
               fontWeight: FontWeight.w900,
               color: StatisticsPage._text,
             ),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 4),
           const Text(
             "See your growth in a month",
             style: TextStyle(
@@ -329,29 +328,38 @@ class _DiscoveryCard extends StatelessWidget {
               color: Color(0xFF3D3D3D),
             ),
           ),
-          const SizedBox(height: 12),
-          SizedBox(
-            height: 72,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: List.generate(12, (i) {
-                final heights = [18, 24, 28, 38, 46, 54, 42, 28, 36, 60, 50, 44];
-                final h = heights[i].toDouble();
-                final isAccent = i == 9;
 
-                return Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 3),
-                    child: Container(
-                      height: h,
-                      decoration: BoxDecoration(
-                        color: isAccent ? StatisticsPage._chipSelected : const Color(0xFF222222),
-                        borderRadius: BorderRadius.circular(6),
+          // ✅ push diagram down more
+          SizedBox(height: (w * 0.1).clamp(28, 36).toDouble()),
+
+          // ✅ lower bars further by padding top
+          SizedBox(
+            height: (w * 0.3).clamp(100, 120).toDouble(),
+            child: Padding(
+              padding: EdgeInsets.only(top: (w * 0.06).clamp(16, 22).toDouble()),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: List.generate(12, (i) {
+                  final heights = [18, 22, 26, 32, 40, 48, 34, 22, 30, 56, 44, 38];
+                  final isAccent = i == 9;
+
+                  return Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 3),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          height: heights[i].toDouble(),
+                          decoration: BoxDecoration(
+                            color: isAccent ? StatisticsPage._chipSelected : const Color(0xFF222222),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                );
-              }),
+                  );
+                }),
+              ),
             ),
           ),
         ],
@@ -360,28 +368,26 @@ class _DiscoveryCard extends StatelessWidget {
   }
 }
 
-class _GreenCurveClipper extends CustomClipper<Path> {
+/* ---------------- Background Painter ---------------- */
+
+class _StatsGreenPainter extends CustomPainter {
+  _StatsGreenPainter({required this.color});
+  final Color color;
+
   @override
-  Path getClip(Size size) {
-    final w = size.width;
-    final h = size.height;
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = color;
 
-    // Curve positions tuned to resemble your screenshot
-    final leftY = h * 0.17;
-    final midY = h * 0.07;
-    final rightY = h * 0.14;
+    final path = Path()
+      ..lineTo(0, size.height * 0.22)
+      ..quadraticBezierTo(size.width * 0.55, size.height * 0.04, size.width, size.height * 0.18)
+      ..lineTo(size.width, 0)
+      ..close();
 
-    final path = Path();
-    path.moveTo(0, leftY);
-    path.quadraticBezierTo(w * 0.35, midY, w * 0.72, leftY + 10);
-    path.quadraticBezierTo(w * 0.90, rightY + 20, w, rightY);
-
-    path.lineTo(w, h);
-    path.lineTo(0, h);
-    path.close();
-    return path;
+    canvas.drawPath(path, paint);
+    canvas.drawRect(Rect.fromLTWH(0, size.height * 0.18, size.width, size.height), paint);
   }
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

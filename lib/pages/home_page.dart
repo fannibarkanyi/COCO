@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:coco/pages/creating_page.dart';
+
+import 'creating_page.dart';
+import 'activity_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -15,12 +17,11 @@ class HomePage extends StatelessWidget {
     const double svgViewBoxHeight = 194;
     final double topSvgHeight = w * (svgViewBoxHeight / svgViewBoxWidth);
 
-    // ignore: unused_local_variable
     const bg = Color.fromRGBO(235, 235, 235, 1);
     const darkCard = Color(0xFF2F2F2F);
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: bg,
       body: Stack(
         children: [
           // TOP SVG
@@ -89,7 +90,7 @@ class HomePage extends StatelessWidget {
 
                 const Spacer(),
 
-                // BIG ACTION CARD (CLICKABLE)
+                // BIG ACTION CARD (Create Post)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Material(
@@ -99,13 +100,15 @@ class HomePage extends StatelessWidget {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => const CreatingPage()),
+                          MaterialPageRoute(
+                            builder: (_) => const CreatingPage(),
+                          ),
                         );
                       },
                       child: Container(
                         width: double.infinity,
-                        height: 118,
-                        padding: const EdgeInsets.fromLTRB(18, 18, 18, 18),
+                        height: 120,
+                        padding: const EdgeInsets.all(18),
                         decoration: BoxDecoration(
                           color: darkCard,
                           borderRadius: BorderRadius.circular(18),
@@ -124,7 +127,6 @@ class HomePage extends StatelessWidget {
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
                                       fontFamily: "Inter",
-                                      height: 1.0,
                                     ),
                                   ),
                                   SizedBox(height: 2),
@@ -146,13 +148,11 @@ class HomePage extends StatelessWidget {
                                       fontSize: 11,
                                       fontWeight: FontWeight.w500,
                                       fontFamily: "Inter",
-                                      height: 1.1,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-
                             Container(
                               width: 34,
                               height: 34,
@@ -176,19 +176,36 @@ class HomePage extends StatelessWidget {
                 const Spacer(),
 
                 // SMALL CARDS
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Row(
                     children: [
+                      // ✅ YOUR ACTIVITY CARD (ONLY place ActivityPage is opened)
                       Expanded(
-                        child: _SmallCard(
-                          titleTop: "Your",
-                          titleBig: "Activity",
-                          subtitle: "see your\nprevious posts,\nstories, etc",
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(18),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const ActivityPage(),
+                                ),
+                              );
+                            },
+                            child: const _SmallCard(
+                              titleTop: "Your",
+                              titleBig: "Activity",
+                              subtitle: "see your\nprevious posts,\nstories, etc",
+                            ),
+                          ),
                         ),
                       ),
-                      SizedBox(width: 14),
-                      Expanded(
+                      const SizedBox(width: 14),
+
+                      // HELP CARD (no navigation yet)
+                      const Expanded(
                         child: _SmallCard(
                           titleTop: "Need",
                           titleBig: "Help?",
@@ -208,6 +225,8 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
+/* ---------------- SMALL CARD ---------------- */
 
 class _SmallCard extends StatelessWidget {
   final String titleTop;

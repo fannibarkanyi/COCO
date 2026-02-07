@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'profile_page.dart';
 import 'statistics_page.dart';
+import 'activity_page.dart';
 import '../widgets/bottom_nav.dart';
 
 class AppShell extends StatefulWidget {
@@ -16,10 +17,10 @@ class AppShell extends StatefulWidget {
 class _AppShellState extends State<AppShell> {
   late int index;
 
-  final List<Widget> pages = [
+  final List<Widget> pages = const [
     HomePage(),
-    const StatisticsPage(),
-    const Placeholder(),
+    StatisticsPage(),
+    Placeholder(),
     ProfilePage(),
   ];
 
