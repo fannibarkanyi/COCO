@@ -6,14 +6,15 @@ import 'statistics_page.dart';
 import '../widgets/bottom_nav.dart';
 
 class AppShell extends StatefulWidget {
-  const AppShell({super.key});
+  final int initialIndex;
+  const AppShell({super.key, this.initialIndex = 0});
 
   @override
   State<AppShell> createState() => _AppShellState();
 }
 
 class _AppShellState extends State<AppShell> {
-  int index = 0;
+  late int index;
 
   final List<Widget> pages = [
     HomePage(),
@@ -21,6 +22,12 @@ class _AppShellState extends State<AppShell> {
     const Placeholder(),
     ProfilePage(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    index = widget.initialIndex;
+  }
 
   @override
   Widget build(BuildContext context) {

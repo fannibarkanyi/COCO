@@ -15,6 +15,7 @@ class HomePage extends StatelessWidget {
     const double svgViewBoxHeight = 194;
     final double topSvgHeight = w * (svgViewBoxHeight / svgViewBoxWidth);
 
+    // ignore: unused_local_variable
     const bg = Color.fromRGBO(235, 235, 235, 1);
     const darkCard = Color(0xFF2F2F2F);
 
