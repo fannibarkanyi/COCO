@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'profile_page.dart';
 import 'statistics_page.dart';
-import 'activity_page.dart';
 import '../widgets/bottom_nav.dart';
 
 class AppShell extends StatefulWidget {

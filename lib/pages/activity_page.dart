@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ActivityPage extends StatefulWidget {
   const ActivityPage({super.key});
@@ -15,6 +16,16 @@ class _ActivityPageState extends State<ActivityPage> {
     final media = MediaQuery.of(context);
     final w = media.size.width;
     final h = media.size.height;
+    
+    // TOP SVG sizing
+    const double svgViewBoxWidth = 393;
+    const double svgViewBoxHeight = 143;
+    final double topSvgHeight = w * (svgViewBoxHeight / svgViewBoxWidth);
+
+    // BOTTOM SVG SIZING
+    const double svgViewBoxW = 393;
+    const double svgViewBoxH = 471;
+    final double bottomSvgHeight = w * (svgViewBoxH / svgViewBoxW);
 
     double clamp(double v, double min, double max) => v.clamp(min, max);
 
@@ -30,31 +41,35 @@ class _ActivityPageState extends State<ActivityPage> {
       body: SafeArea(
         child: Stack(
           children: [
-            // Top green curve
+            // Top SVG
             Positioned(
-              left: 0,
-              right: 0,
-              top: 0,
-              child: SizedBox(
-                height: clamp(h * 0.18, 120, 190),
-                child: CustomPaint(
-                  painter: _TopCurvePainter(color: green),
+                top: 0,
+                left: 0,
+                right: 0,
+                child: SizedBox(
+                  height: topSvgHeight,
+                  child: SvgPicture.asset(
+                    'assets/activity_top.svg',
+                    fit: BoxFit.fitWidth,
+                    alignment: Alignment.topLeft,
+                  ),
                 ),
               ),
-            ),
 
-            // Bottom green curve
+            // Bottom SVG
             Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: SizedBox(
-                height: clamp(h * 0.22, 150, 240),
-                child: CustomPaint(
-                  painter: _BottomCurvePainter(color: green),
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: SizedBox(
+                  height: bottomSvgHeight,
+                  child: SvgPicture.asset(
+                    'assets/activity_bottom.svg',
+                    fit: BoxFit.cover,
+                    alignment: Alignment.bottomCenter,
+                  ),
                 ),
               ),
-            ),
 
             // Content
             Column(
@@ -366,43 +381,4 @@ class _TabTextButton extends StatelessWidget {
       ),
     );
   }
-}
-
-class _TopCurvePainter extends CustomPainter {
-  _TopCurvePainter({required this.color});
-  final Color color;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = color;
-    final path = Path()
-      ..lineTo(0, size.height * 0.70)
-      ..quadraticBezierTo(size.width * 0.65, size.height * 0.95, size.width, size.height * 0.55)
-      ..lineTo(size.width, 0)
-      ..close();
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-class _BottomCurvePainter extends CustomPainter {
-  _BottomCurvePainter({required this.color});
-  final Color color;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = color;
-    final path = Path()
-      ..moveTo(0, size.height)
-      ..lineTo(0, size.height * 0.35)
-      ..quadraticBezierTo(size.width * 0.45, size.height * 0.10, size.width, size.height * 0.40)
-      ..lineTo(size.width, size.height)
-      ..close();
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

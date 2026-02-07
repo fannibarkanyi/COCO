@@ -10,12 +10,19 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
+    // ignore: unused_local_variable
     final h = MediaQuery.of(context).size.height;
 
     // TOP SVG sizing
     const double svgViewBoxWidth = 393;
     const double svgViewBoxHeight = 194;
     final double topSvgHeight = w * (svgViewBoxHeight / svgViewBoxWidth);
+
+    // BOTTOM SVG SIZING
+    const double svgViewBoxW = 393;
+    const double svgViewBoxH = 364;
+    final double bottomSvgHeight = w * (svgViewBoxH / svgViewBoxW);
+
 
     const bg = Color.fromRGBO(235, 235, 235, 1);
     const darkCard = Color(0xFF2F2F2F);
@@ -41,18 +48,18 @@ class HomePage extends StatelessWidget {
 
           // BOTTOM GREEN SHAPE
           Positioned(
-            bottom: 0,
-            left: -w * 0.45,
-            child: SizedBox(
-              width: w * 1.9,
-              height: h * 0.33,
-              child: SvgPicture.asset(
-                'assets/circlehp.svg',
-                fit: BoxFit.cover,
-                alignment: Alignment.bottomCenter,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: SizedBox(
+                  height: bottomSvgHeight,
+                  child: SvgPicture.asset(
+                    'assets/circlehp.svg',
+                    fit: BoxFit.cover,
+                    alignment: Alignment.bottomCenter,
+                  ),
+                ),
               ),
-            ),
-          ),
 
           // CONTENT
           SafeArea(

@@ -155,7 +155,7 @@ class _MonthDropdown extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
 
-  const _MonthDropdown({required this.label, required this.onTap, super.key});
+  const _MonthDropdown({required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -195,7 +195,6 @@ class _AppChip extends StatelessWidget {
     required this.label,
     required this.selected,
     required this.icon,
-    super.key,
   });
 
   @override
@@ -241,7 +240,6 @@ class _StatCard extends StatelessWidget {
     required this.bigText,
     required this.label,
     required this.icon,
-    super.key,
   });
 
   @override
@@ -296,7 +294,7 @@ class _StatCard extends StatelessWidget {
 /* ---------------- Discovery Card ---------------- */
 
 class _DiscoveryCard extends StatelessWidget {
-  const _DiscoveryCard({super.key});
+  const _DiscoveryCard();
 
   @override
   Widget build(BuildContext context) {

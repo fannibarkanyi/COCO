@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../widgets/bottom_nav.dart';
 import 'app_shell.dart';
+import 'post_preview.dart';
+
 
 class PostDetailsPage extends StatefulWidget {
   const PostDetailsPage({super.key});
@@ -233,7 +235,21 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                       width: mathMin(160.0, w * 0.46),
                       height: 44,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => PostPreviewChoosePage(
+        imagePath: "", // next step we’ll pass the picked image path
+        caption: captionCtrl.text.trim(),
+        description: descCtrl.text.trim(),
+        location: locationCtrl.text.trim(),
+        music: musicCtrl.text.trim(),
+      ),
+    ),
+  );
+},
+
                         style: ElevatedButton.styleFrom(
                           backgroundColor: _iconColor,
                           foregroundColor: _lightBg,
