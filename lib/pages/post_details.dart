@@ -47,6 +47,16 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
     );
   }
 
+  List<String> _selectedPlatforms() {
+  final p = <String>[];
+  if (ig) p.add("ig");
+  if (fb) p.add("fb");
+  if (tt) p.add("tt");
+  if (x)  p.add("x");
+  if (li) p.add("li");
+  return p;
+}
+
   @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context);
@@ -241,19 +251,20 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                       height: 44,
                       child: ElevatedButton(
                         onPressed: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => PostPreviewChoosePage(
-        imagePath: widget.imagePath, // ✅ PASS IMAGE HERE
-        caption: captionCtrl.text.trim(),
-        description: descCtrl.text.trim(),
-        location: locationCtrl.text.trim(),
-        music: musicCtrl.text.trim(),
-      ),
-    ),
-  );
-},
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => PostPreviewChoosePage(
+                                imagePath: widget.imagePath,
+                                caption: captionCtrl.text.trim(),
+                                description: descCtrl.text.trim(),
+                                location: locationCtrl.text.trim(),
+                                music: musicCtrl.text.trim(),
+                                platforms: _selectedPlatforms(), // ✅ NEW
+                              ),
+                            ),
+                          );
+                        }, // ✅ IMPORTANT: closes onPressed
 
                         style: ElevatedButton.styleFrom(
                           backgroundColor: _iconColor,
@@ -274,6 +285,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                       ),
                     ),
                   ),
+
 
                   // a little extra so it feels like the mock (big airy bottom)
                   SizedBox(height: h * 0.04),

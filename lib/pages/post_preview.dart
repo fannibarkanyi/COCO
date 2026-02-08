@@ -9,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/bottom_nav.dart';
 import 'app_shell.dart';
 import 'activity_page.dart';
+import 'home_page.dart';
 
 class PostPreviewChoosePage extends StatefulWidget {
   const PostPreviewChoosePage({
@@ -18,6 +19,7 @@ class PostPreviewChoosePage extends StatefulWidget {
     required this.description,
     required this.location,
     required this.music,
+    required this.platforms,
   });
 
   final String imagePath;
@@ -25,6 +27,7 @@ class PostPreviewChoosePage extends StatefulWidget {
   final String description;
   final String location;
   final String music;
+  final List<String> platforms;
 
   @override
   State<PostPreviewChoosePage> createState() => _PostPreviewChoosePageState();
@@ -244,6 +247,7 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
     "description": widget.description,
     "location": widget.location,
     "music": widget.music,
+    "platforms": widget.platforms,
     "createdAt": FieldValue.serverTimestamp(),
   });
 
@@ -264,11 +268,14 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
     ),
   ).then((_) {
     // 3) Go to Activity page after popup closes
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (_) => const ActivityPage()),
-      (route) => false,
-    );
+    Navigator.of(context).pushAndRemoveUntil(
+    MaterialPageRoute(builder: (_) => const HomePage()),
+    (route) => false,
+  );
+
+  Navigator.of(context).push(
+    MaterialPageRoute(builder: (_) => const ActivityPage()),
+  );
   });
 },
 
