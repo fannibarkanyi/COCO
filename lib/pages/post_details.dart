@@ -19,8 +19,8 @@ class PostDetailsPage extends StatefulWidget {
 }
 
 class _PostDetailsPageState extends State<PostDetailsPage> {
-  static const _iconColor = Color(0xFF2B2B2B);
-  static const _lightBg = Color(0xFFEBEBEB);
+  static const dark = Color(0xFF2B2B2B);
+  static const bg = Color(0xFFEBEBEB);
   static const double _topAspect = 393/504;
 
   final captionCtrl = TextEditingController();
@@ -74,7 +74,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
       ),
       body: Stack(
         children: [
-          Positioned.fill(child: Container(color: _lightBg)),
+          Positioned.fill(child: Container(color: bg)),
 
           // TOP SVG
            Positioned(
@@ -108,7 +108,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                           child: Icon(
                             Icons.chevron_left,
                             size: 32,
-                            color: _iconColor,
+                            color: dark,
                           ),
                         ),
                       ),
@@ -119,7 +119,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                           fontSize: 35,
                           fontWeight: FontWeight.w800,
                           fontFamily: "Inter",
-                          color: _iconColor,
+                          color: dark,
                         ),
                       ),
                     ],
@@ -161,7 +161,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       fontFamily: "Inter",
-                      color: _iconColor,
+                      color: dark,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -172,8 +172,8 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                     child: ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: _iconColor,
-                        foregroundColor: _lightBg,
+                        backgroundColor: dark,
+                        foregroundColor: bg,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -199,7 +199,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       fontFamily: "Inter",
-                      color: _iconColor,
+                      color: dark,
                     ),
                   ),
 
@@ -267,8 +267,8 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                         }, // ✅ IMPORTANT: closes onPressed
 
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: _iconColor,
-                          foregroundColor: _lightBg,
+                          backgroundColor: dark,
+                          foregroundColor: bg,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -312,7 +312,7 @@ class _InputField extends StatelessWidget {
   final String hint;
   final int maxLines;
 
-  static const _iconColor = Color(0xFF2B2B2B);
+  static const dark = Color(0xFF2B2B2B);
 
   @override
   Widget build(BuildContext context) {
@@ -323,7 +323,7 @@ class _InputField extends StatelessWidget {
         fontSize: 13,
         fontWeight: FontWeight.w600,
         fontFamily: "Inter",
-        color: _iconColor,
+        color: dark,
       ),
       decoration: InputDecoration(
         hintText: hint,
@@ -331,22 +331,22 @@ class _InputField extends StatelessWidget {
           fontSize: 13,
           fontWeight: FontWeight.w600,
           fontFamily: "Inter",
-          color: _iconColor,
+          color: dark,
         ),
         filled: true,
-        fillColor: const Color(0xFFF1F1F1),
+        fillColor: const Color(0xFFEBEBEB),
         contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: _iconColor, width: 1),
+          borderSide: const BorderSide(color: dark, width: 1),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: _iconColor, width: 1),
+          borderSide: const BorderSide(color: dark, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: _iconColor, width: 1.4),
+          borderSide: const BorderSide(color: dark, width: 1.4),
         ),
       ),
     );
@@ -366,7 +366,7 @@ class _SocialSquare extends StatelessWidget {
   final VoidCallback onTap;
   final String label;
 
-  static const _iconColor = Color(0xFF2B2B2B);
+  static const dark = Color(0xFF2B2B2B);
 
   @override
   Widget build(BuildContext context) {
@@ -380,11 +380,11 @@ class _SocialSquare extends StatelessWidget {
           color: const Color(0xFFE0E0E0),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: selected ? _iconColor : Colors.transparent,
+            color: selected ? dark : Colors.transparent,
             width: 2,
           ),
         ),
-        child: Icon(icon, color: _iconColor),
+        child: Icon(icon, color: dark),
       ),
     );
   }

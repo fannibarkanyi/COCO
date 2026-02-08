@@ -25,8 +25,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   bool _loading = true;
 
-  static const _iconColor = Color(0xFF2B2B2B);
-  static const _lightBg = Color(0xFFEBEBEB);
+  static const dark = Color(0xFF2B2B2B);
+  static const bg = Color(0xFFEBEBEB);
 
   // SVG aspect ratios
   static const double _topAspect = 393 / 174;
@@ -102,7 +102,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final result = await showDialog<String>(
       context: context,
       builder: (_) => AlertDialog(
-        backgroundColor: const Color.fromARGB(255, 253, 235, 235),
+        backgroundColor: const Color(0xFFEBEBEB),
         title: Text(title),
         content: TextField(
           controller: controller,
@@ -240,14 +240,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                 fontSize: 36,
                                 fontWeight: FontWeight.w700,
                                 fontFamily: "Inter",
-                                color: _iconColor,
+                                color: dark,
                               ),
                             ),
                           ),
                           IconButton(
                             onPressed: () {},
                             icon: const Icon(Icons.settings),
-                            color: _iconColor,
+                            color: dark,
                           ),
                         ],
                       ),
@@ -265,7 +265,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
                                 fontFamily: "Inter",
-                                color: _iconColor,
+                                color: dark,
                               ),
                             ),
                             const SizedBox(width: 6),
@@ -278,7 +278,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 firestoreUpdate: (v) => {'displayName': v},
                               ),
                               child: const Icon(Icons.edit,
-                                  size: 18, color: _iconColor),
+                                  size: 18, color: dark),
                             ),
                           ],
                         ),
@@ -320,7 +320,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           fontFamily: "Inter",
-                          color: _iconColor,
+                          color: dark,
                         ),
                       ),
 
@@ -353,7 +353,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               child: VerticalDivider(
                                 thickness: 1,
                                 width: 1,
-                                color: _iconColor,
+                                color: dark,
                               ),
                             ),
                             Expanded(
@@ -391,7 +391,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     onTap: _loading ? null : _pickAndUploadAvatar,
                     child: CircleAvatar(
                       radius: avatarRadius,
-                      backgroundColor: _lightBg,
+                      backgroundColor: bg,
                       child: ClipOval(child: _buildAvatarImage()),
                     ),
                   ),
@@ -410,7 +410,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: _iconColor,
+                        backgroundColor: dark,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
@@ -419,7 +419,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: const Text(
                         "Sign out",
                         style: TextStyle(
-                          color: _lightBg,
+                          color: bg,
                           fontSize: 24,
                           fontWeight: FontWeight.w700,
                           fontFamily: "Inter",
@@ -482,7 +482,7 @@ class _InfoRow extends StatelessWidget {
     required this.onEdit,
   });
 
-  static const _iconColor = Color(0xFF2B2B2B);
+  static const dark = Color(0xFF2B2B2B);
 
   @override
   Widget build(BuildContext context) {
@@ -496,7 +496,7 @@ class _InfoRow extends StatelessWidget {
               fontSize: 12,
               fontWeight: FontWeight.w600,
               fontFamily: "Inter",
-              color: _iconColor,
+              color: dark,
             ),
           ),
           const SizedBox(width: 6),
@@ -506,13 +506,13 @@ class _InfoRow extends StatelessWidget {
               fontSize: 12,
               fontWeight: FontWeight.w500,
               fontFamily: "Inter",
-              color: _iconColor,
+              color: dark,
             ),
           ),
           const SizedBox(width: 6),
           GestureDetector(
             onTap: onEdit,
-            child: const Icon(Icons.edit, size: 16, color: _iconColor),
+            child: const Icon(Icons.edit, size: 16, color: dark),
           ),
         ],
       ),
@@ -531,7 +531,7 @@ class _SocialTile extends StatelessWidget {
     required this.onTap,
   });
 
-  static const _iconColor = Color(0xFF2B2B2B);
+  static const dark = Color(0xFF2B2B2B);
 
   @override
   Widget build(BuildContext context) {
@@ -541,7 +541,7 @@ class _SocialTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           children: [
-            Icon(icon, size: 18, color: _iconColor),
+            Icon(icon, size: 18, color: dark),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
@@ -550,11 +550,11 @@ class _SocialTile extends StatelessWidget {
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   fontFamily: "Inter",
-                  color: _iconColor,
+                  color: dark,
                 ),
               ),
             ),
-            const Icon(Icons.chevron_right, size: 18, color: _iconColor),
+            const Icon(Icons.chevron_right, size: 18, color: dark),
           ],
         ),
       ),

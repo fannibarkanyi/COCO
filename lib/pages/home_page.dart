@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'creating_page.dart';
 import 'activity_page.dart';
+import 'help_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -24,8 +25,8 @@ class HomePage extends StatelessWidget {
     final double bottomSvgHeight = w * (svgViewBoxH / svgViewBoxW);
 
 
-    const bg = Color.fromRGBO(235, 235, 235, 1);
-    const darkCard = Color(0xFF2F2F2F);
+    const bg = Color(0xFFEBEBEB);
+    const darkCard = Color(0xFF2B2B2B);
 
     return Scaffold(
       backgroundColor: bg,
@@ -46,7 +47,7 @@ class HomePage extends StatelessWidget {
             ),
           ),
 
-          // BOTTOM GREEN SHAPE
+          // BOTTOM SVG
           Positioned(
                 left: 0,
                 right: 0,
@@ -121,37 +122,37 @@ class HomePage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(18),
                         ),
                         child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Expanded(
+                            Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween, // ✅ key
+                                children: const [
                                   Text(
                                     "Create a",
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: bg,
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
                                       fontFamily: "Inter",
                                     ),
                                   ),
-                                  SizedBox(height: 2),
                                   Text(
                                     "Post",
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: bg,
                                       fontSize: 38,
                                       fontWeight: FontWeight.w800,
                                       fontFamily: "Inter",
                                       height: 0.95,
                                     ),
                                   ),
-                                  SizedBox(height: 6),
                                   Text(
                                     "post something for your page",
+                                    maxLines: 1, // ✅ prevents layout surprises
+                                    overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                      color: Color.fromRGBO(220, 220, 220, 1),
+                                      color: bg,
                                       fontSize: 11,
                                       fontWeight: FontWeight.w500,
                                       fontFamily: "Inter",
@@ -164,12 +165,12 @@ class HomePage extends StatelessWidget {
                               width: 34,
                               height: 34,
                               decoration: BoxDecoration(
-                                color: const Color.fromRGBO(255, 255, 255, 0.18),
+                                color: darkCard,
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.chevron_right,
-                                color: Colors.white,
+                                color: bg,
                                 size: 22,
                               ),
                             ),
@@ -211,12 +212,24 @@ class HomePage extends StatelessWidget {
                       ),
                       const SizedBox(width: 14),
 
-                      // HELP CARD (no navigation yet)
-                      const Expanded(
-                        child: _SmallCard(
-                          titleTop: "Need",
-                          titleBig: "Help?",
-                          subtitle: "improve your\nwork with\ntutorials and\ncourses",
+                      // HELP CARD 
+                      Expanded(
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(18),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (_) => const HelpPage()),
+                              );
+                            },
+                            child: const _SmallCard(
+                              titleTop: "Need",
+                              titleBig: "Help?",
+                              subtitle: "improve your\nwork with\ntutorials and\ncourses",
+                            ),
+                          ),
                         ),
                       ),
                     ],

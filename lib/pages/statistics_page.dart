@@ -1,18 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-class StatisticsPage extends StatelessWidget {
+class StatisticsPage extends StatefulWidget {
   const StatisticsPage({super.key});
 
-  static const Color _green = Color(0xFF8FE08B);
-  static const Color _text = Color(0xFF1F1F1F);
-  static const Color _card = Color(0xFFF3F3F3);
-  static const Color _chipSelected = Color(0xFF4FAE56);
+  
+  static const Color dark = Color(0xFF2B2B2B);
+  static const Color bg = Color(0xFFEBEBEB);
+  static const Color selectedGreen = Color(0xFF51AD42);
+
+  @override
+  State<StatisticsPage> createState() => _StatisticsPageState();
+}
+
+class _StatisticsPageState extends State<StatisticsPage> {
+  int _chipIndex = 0; // 0=Overview, 1=Instagram, 2=Facebook, 3=TikTok
 
   @override
   Widget build(BuildContext context) {
     final m = MediaQuery.of(context);
     final w = m.size.width;
     final h = m.size.height;
+
+    // svg sizing
+    const double svgViewBoxW = 393;
+    const double svgViewBoxH = 809;
+    final double bottomSvgHeight = w * (svgViewBoxH / svgViewBoxW);
 
     double clamp(double v, double min, double max) => v.clamp(min, max);
 
@@ -24,12 +37,20 @@ class StatisticsPage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          const Positioned.fill(child: ColoredBox(color: Colors.white)),
+          const Positioned.fill(child: ColoredBox(color: Color(0xFFEBEBEB))),
 
-          // Green background curve
-          Positioned.fill(
-            child: CustomPaint(
-              painter: _StatsGreenPainter(color: _green),
+          // SVG
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: SizedBox(
+              height: bottomSvgHeight,
+              child: SvgPicture.asset(
+                'assets/statistics.svg',
+                fit: BoxFit.cover,
+                alignment: Alignment.bottomCenter,
+              ),
             ),
           ),
 
@@ -49,7 +70,7 @@ class StatisticsPage extends StatelessWidget {
                           style: TextStyle(
                             fontSize: clamp(w * 0.09, 30, 40),
                             fontWeight: FontWeight.w900,
-                            color: _text,
+                            color: StatisticsPage.dark,
                             height: 1.05,
                           ),
                         ),
@@ -60,34 +81,38 @@ class StatisticsPage extends StatelessWidget {
 
                   const SizedBox(height: 14),
 
-                  // Chips row
+                  // Chips row (✅ now clickable)
                   SizedBox(
                     height: 46,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
-                      children: const [
+                      children: [
                         _AppChip(
                           label: "Overview",
-                          selected: true,
+                          selected: _chipIndex == 0,
                           icon: Icons.bar_chart_rounded,
+                          onTap: () => setState(() => _chipIndex = 0),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         _AppChip(
                           label: "instagram",
-                          selected: false,
+                          selected: _chipIndex == 1,
                           icon: Icons.camera_alt_outlined,
+                          onTap: () => setState(() => _chipIndex = 1),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         _AppChip(
                           label: "Facebook",
-                          selected: false,
+                          selected: _chipIndex == 2,
                           icon: Icons.facebook,
+                          onTap: () => setState(() => _chipIndex = 2),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         _AppChip(
                           label: "TikTok",
-                          selected: false,
+                          selected: _chipIndex == 3,
                           icon: Icons.music_note_outlined,
+                          onTap: () => setState(() => _chipIndex = 3),
                         ),
                       ],
                     ),
@@ -176,7 +201,8 @@ class _MonthDropdown extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 4),
-            const Icon(Icons.keyboard_arrow_down_rounded, size: 18, color: Color(0xFF2E2E2E)),
+            const Icon(Icons.keyboard_arrow_down_rounded,
+                size: 18, color: Color(0xFF2E2E2E)),
           ],
         ),
       ),
@@ -190,40 +216,46 @@ class _AppChip extends StatelessWidget {
   final String label;
   final bool selected;
   final IconData icon;
+  final VoidCallback onTap;
 
   const _AppChip({
     required this.label,
     required this.selected,
     required this.icon,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final bg = selected ? StatisticsPage._chipSelected : Colors.white;
-    final fg = selected ? Colors.white : const Color(0xFF2A2A2A);
+    final bg = selected ? StatisticsPage.selectedGreen : Color(0xFFEBEBEB);
+    final fg = selected ? Color(0xFFEBEBEB) : const Color(0xFF2B2B2B);
     final border = selected ? Colors.transparent : const Color(0x22000000);
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: border),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 16, color: fg),
-          const SizedBox(width: 8),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w800,
-              color: fg,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: border),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 16, color: fg),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+                color: fg,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -246,14 +278,13 @@ class _StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
 
-    // ✅ must be double
     final double cardHeight = (w * 0.45).clamp(165, 190).toDouble();
 
     return Container(
       height: cardHeight,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: StatisticsPage._card,
+        color: const Color(0xFFEBEBEB),
         borderRadius: BorderRadius.circular(18),
       ),
       child: Stack(
@@ -265,7 +296,7 @@ class _StatCard extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 48,
                 fontWeight: FontWeight.w900,
-                color: StatisticsPage._text,
+                color: StatisticsPage.dark,
                 height: 1.0,
               ),
             ),
@@ -277,13 +308,13 @@ class _StatCard extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w900,
-                color: StatisticsPage._text,
+                color: StatisticsPage.dark,
               ),
             ),
           ),
           Align(
             alignment: Alignment.bottomRight,
-            child: Icon(icon, size: 22, color: StatisticsPage._text),
+            child: Icon(icon, size: 22, color: StatisticsPage.dark),
           ),
         ],
       ),
@@ -303,7 +334,7 @@ class _DiscoveryCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: StatisticsPage._card,
+        color: const Color(0xFFEBEBEB),
         borderRadius: BorderRadius.circular(18),
       ),
       child: Column(
@@ -314,7 +345,7 @@ class _DiscoveryCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w900,
-              color: StatisticsPage._text,
+              color: StatisticsPage.dark,
             ),
           ),
           const SizedBox(height: 4),
@@ -326,11 +357,7 @@ class _DiscoveryCard extends StatelessWidget {
               color: Color(0xFF3D3D3D),
             ),
           ),
-
-          // ✅ push diagram down more
           SizedBox(height: (w * 0.1).clamp(28, 36).toDouble()),
-
-          // ✅ lower bars further by padding top
           SizedBox(
             height: (w * 0.3).clamp(100, 120).toDouble(),
             child: Padding(
@@ -338,9 +365,7 @@ class _DiscoveryCard extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: List.generate(12, (i) {
-                  final heights = [18, 22, 26, 32, 40, 48, 34, 22, 30, 56, 44, 38];
-                  final isAccent = i == 9;
-
+                  final heights = List.filled(12, 10);
                   return Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 3),
@@ -349,7 +374,7 @@ class _DiscoveryCard extends StatelessWidget {
                         child: Container(
                           height: heights[i].toDouble(),
                           decoration: BoxDecoration(
-                            color: isAccent ? StatisticsPage._chipSelected : const Color(0xFF222222),
+                            color: const Color(0xFF222222),
                             borderRadius: BorderRadius.circular(6),
                           ),
                         ),
@@ -364,28 +389,4 @@ class _DiscoveryCard extends StatelessWidget {
       ),
     );
   }
-}
-
-/* ---------------- Background Painter ---------------- */
-
-class _StatsGreenPainter extends CustomPainter {
-  _StatsGreenPainter({required this.color});
-  final Color color;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = color;
-
-    final path = Path()
-      ..lineTo(0, size.height * 0.22)
-      ..quadraticBezierTo(size.width * 0.55, size.height * 0.04, size.width, size.height * 0.18)
-      ..lineTo(size.width, 0)
-      ..close();
-
-    canvas.drawPath(path, paint);
-    canvas.drawRect(Rect.fromLTWH(0, size.height * 0.18, size.width, size.height), paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

@@ -114,7 +114,7 @@ void initState() {
     final horizontalPad = clamp(w * 0.06, 16, 28);
     final cardRadius = clamp(w * 0.05, 16, 24);
 
-    final green = const Color(0xFF9BE28C);
+    final green = const Color(0xFF95DA89);
     final bg = const Color(0xFFF4F4F4);
     final dark = const Color(0xFF2F2F2F);
 
@@ -254,7 +254,7 @@ void initState() {
                 children: [
                   // Image / placeholder
                   Container(
-                    color: Colors.white,
+                    color: bg,
                     child: path.isEmpty
                         ? const Icon(Icons.image)
                         : Image.file(File(path), fit: BoxFit.cover),
@@ -277,7 +277,7 @@ void initState() {
                         child: const Icon(
                           Icons.more_horiz,
                           size: 18,
-                          color: Colors.white,
+                          color: Color(0xFFEBEBEB),
                         ),
                       ),
                       onSelected: (value) async {
@@ -374,7 +374,7 @@ void initState() {
 
           return Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: bg,
               borderRadius: BorderRadius.circular(cardRadius),
               border: Border.all(color: Colors.black12),
             ),
@@ -488,7 +488,7 @@ class _EmptyCard extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(clamp(w * 0.07, 18, 26)),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Color(0xFFEBEBEB),
           borderRadius: BorderRadius.circular(radius),
           border: Border.all(color: Colors.black12),
         ),
@@ -525,7 +525,7 @@ class _PlusPlaceholder extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Color(0xFFEBEBEB),
         borderRadius: BorderRadius.circular(radius),
         border: Border.all(color: Colors.black12),
       ),

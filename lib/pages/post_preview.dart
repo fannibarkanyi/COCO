@@ -9,7 +9,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/bottom_nav.dart';
 import 'app_shell.dart';
 import 'activity_page.dart';
-import 'home_page.dart';
 
 class PostPreviewChoosePage extends StatefulWidget {
   const PostPreviewChoosePage({
@@ -34,8 +33,8 @@ class PostPreviewChoosePage extends StatefulWidget {
 }
 
 class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
-  static const _iconColor = Color(0xFF2B2B2B);
-  static const _bg = Color(0xFFEBEBEB);
+  static const dark = Color(0xFF2B2B2B);
+  static const bg = Color(0xFFEBEBEB);
 
   // 0 = Story, 1 = Post, 2 = Blog
   int selected = 0;
@@ -127,7 +126,7 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
       ),
       body: Stack(
         children: [
-          Positioned.fill(child: Container(color: _bg)),
+          Positioned.fill(child: Container(color: bg)),
 
           // BOTTOM SVG
           Positioned(
@@ -161,7 +160,7 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
                           child: Icon(
                             Icons.chevron_left,
                             size: 32,
-                            color: _iconColor,
+                            color: dark,
                           ),
                         ),
                       ),
@@ -172,7 +171,7 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
                           fontSize: 35,
                           fontWeight: FontWeight.w800,
                           fontFamily: "Inter",
-                          color: _iconColor,
+                          color: dark,
                         ),
                       ),
                     ],
@@ -222,7 +221,7 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                         fontFamily: "Inter",
-                        color: _iconColor,
+                        color: dark,
                         height: 1.3,
                       ),
                     ),
@@ -269,7 +268,7 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
   ).then((_) {
     // 3) Go to Activity page after popup closes
     Navigator.of(context).pushAndRemoveUntil(
-    MaterialPageRoute(builder: (_) => const HomePage()),
+    MaterialPageRoute(builder: (_) => const AppShell(initialIndex: 0)),
     (route) => false,
   );
 
@@ -281,8 +280,8 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
 
 
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: _iconColor,
-                          foregroundColor: _bg,
+                          backgroundColor: dark,
+                          foregroundColor: bg,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -318,7 +317,7 @@ class _SegmentedTabs extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onChanged;
 
-  static const _iconColor = Color(0xFF2B2B2B);
+  static const dark = Color(0xFF2B2B2B);
 
   @override
   Widget build(BuildContext context) {
@@ -332,9 +331,9 @@ class _SegmentedTabs extends StatelessWidget {
             height: 34,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: active ? _iconColor : Colors.transparent,
+              color: active ? dark : Colors.transparent,
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: _iconColor, width: 1),
+              border: Border.all(color: dark, width: 1),
             ),
             child: Text(
               label,
@@ -342,7 +341,7 @@ class _SegmentedTabs extends StatelessWidget {
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
                 fontFamily: "Inter",
-                color: active ? Colors.white : _iconColor,
+                color: active ? Color(0xFFEBEBEB) : dark,
               ),
             ),
           ),
@@ -402,7 +401,7 @@ class StoryPreview extends StatelessWidget {
               children: [
                 const CircleAvatar(
                   radius: 14,
-                  backgroundColor: Colors.white,
+                  backgroundColor: Color(0xFFEBEBEB),
                   child: CircleAvatar(
                     radius: 13,
                     backgroundImage: AssetImage('assets/profile_pic.png'),
@@ -419,7 +418,7 @@ class StoryPreview extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Color(0xFFEBEBEB),
                           fontWeight: FontWeight.w700,
                           fontFamily: "Inter",
                           fontSize: 12,
@@ -431,7 +430,7 @@ class StoryPreview extends StatelessWidget {
                         const SizedBox(height: 2),
                         Row(
                           children: [
-                            const Icon(Icons.music_note, size: 12, color: Colors.white),
+                            const Icon(Icons.music_note, size: 12, color: Color(0xFFEBEBEB)),
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
@@ -439,7 +438,7 @@ class StoryPreview extends StatelessWidget {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
-                                  color: Colors.white,
+                                  color: Color(0xFFEBEBEB),
                                   fontWeight: FontWeight.w600,
                                   fontFamily: "Inter",
                                   fontSize: 11,
@@ -455,7 +454,7 @@ class StoryPreview extends StatelessWidget {
                 ),
 
                 const SizedBox(width: 8),
-                const Icon(Icons.more_horiz, color: Colors.white),
+                const Icon(Icons.more_horiz, color: Color(0xFFEBEBEB)),
               ],
             ),
           ),
@@ -474,7 +473,7 @@ class StoryPreview extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: Color(0xFFEBEBEB),
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
                       fontFamily: "Inter",
@@ -485,14 +484,14 @@ class StoryPreview extends StatelessWidget {
                 Row(
                   children: [
                     if (location.trim().isNotEmpty) ...[
-                      const Icon(Icons.location_on, size: 14, color: Colors.white),
+                      const Icon(Icons.location_on, size: 14, color: Color(0xFFEBEBEB)),
                       const SizedBox(width: 4),
                       Flexible(
                         child: Text(
                           location,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: Color(0xFFEBEBEB),
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
                             fontFamily: "Inter",
@@ -505,14 +504,14 @@ class StoryPreview extends StatelessWidget {
                     // if (location.trim().isNotEmpty && music.trim().isNotEmpty)
                     //   const SizedBox(width: 10),
                     // if (music.trim().isNotEmpty) ...[
-                    //   const Icon(Icons.music_note, size: 14, color: Colors.white),
+                    //   const Icon(Icons.music_note, size: 14, color: Color(0xFFEBEBEB)),
                     //   const SizedBox(width: 4),
                     //   Flexible(
                     //     child: Text(
                     //       music,
                     //       overflow: TextOverflow.ellipsis,
                     //       style: const TextStyle(
-                    //         color: Colors.white,
+                    //         color: Color(0xFFEBEBEB),
                     //         fontSize: 12,
                     //         fontWeight: FontWeight.w700,
                     //         fontFamily: "Inter",
@@ -539,15 +538,15 @@ class StoryPreview extends StatelessWidget {
                     height: 34,
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.18),
+                      color: Color(0xFFEBEBEB).withOpacity(0.18),
                       borderRadius: BorderRadius.circular(22),
-                      border: Border.all(color: Colors.white.withOpacity(0.35)),
+                      border: Border.all(color: Color(0xFFEBEBEB).withOpacity(0.35)),
                     ),
                     alignment: Alignment.centerLeft,
                     child: Text(
                       "Send message",
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.95),
+                        color: Color(0xFFEBEBEB).withOpacity(0.95),
                         fontSize: 12,
                         fontFamily: "Inter",
                         fontWeight: FontWeight.w600,
@@ -556,9 +555,9 @@ class StoryPreview extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 10),
-                const Icon(Icons.favorite_border, color: Colors.white),
+                const Icon(Icons.favorite_border, color: Color(0xFFEBEBEB)),
                 const SizedBox(width: 10),
-                const Icon(Icons.send, color: Colors.white),
+                const Icon(Icons.send, color: Color(0xFFEBEBEB)),
               ],
             ),
           ),
@@ -605,7 +604,7 @@ class PostPreview extends StatelessWidget {
   final String description;
   final String location;
 
-  static const _iconColor = Color(0xFF2B2B2B);
+  static const dark = Color(0xFF2B2B2B);
 
   @override
   Widget build(BuildContext context) {
@@ -641,7 +640,7 @@ class PostPreview extends StatelessWidget {
                             fontSize: 12,
                             fontWeight: FontWeight.w800,
                             fontFamily: "Inter",
-                            color: _iconColor,
+                            color: dark,
                             height: 1.1,
                           ),
                         ),
@@ -655,7 +654,7 @@ class PostPreview extends StatelessWidget {
                               fontSize: 10.5,
                               fontWeight: FontWeight.w600,
                               fontFamily: "Inter",
-                              color: _iconColor.withOpacity(0.75),
+                              color: dark.withOpacity(0.75),
                               height: 1.1,
                             ),
                           ),
@@ -664,7 +663,7 @@ class PostPreview extends StatelessWidget {
                     ),
                   ),
 
-                  const Icon(Icons.more_horiz, color: _iconColor),
+                  const Icon(Icons.more_horiz, color: dark),
                 ],
               ),
             ),
@@ -682,13 +681,13 @@ class PostPreview extends StatelessWidget {
                 children: [
                   Row(
                     children: const [
-                      Icon(Icons.favorite_border, size: 18, color: _iconColor),
+                      Icon(Icons.favorite_border, size: 18, color: dark),
                       SizedBox(width: 10),
-                      Icon(Icons.chat_bubble_outline, size: 18, color: _iconColor),
+                      Icon(Icons.chat_bubble_outline, size: 18, color: dark),
                       SizedBox(width: 10),
-                      Icon(Icons.send, size: 18, color: _iconColor),
+                      Icon(Icons.send, size: 18, color: dark),
                       Spacer(),
-                      Icon(Icons.bookmark_border, size: 18, color: _iconColor),
+                      Icon(Icons.bookmark_border, size: 18, color: dark),
                     ],
                   ),
                   const SizedBox(height: 6),
@@ -701,7 +700,7 @@ class PostPreview extends StatelessWidget {
                       fontSize: 11.5,
                       fontWeight: FontWeight.w700,
                       fontFamily: "Inter",
-                      color: _iconColor,
+                      color: dark,
                       height: 1.25,
                     ),
                   ),
@@ -716,7 +715,7 @@ class PostPreview extends StatelessWidget {
                         fontSize: 10.8,
                         fontWeight: FontWeight.w600,
                         fontFamily: "Inter",
-                        color: _iconColor.withOpacity(0.85),
+                        color: dark.withOpacity(0.85),
                         height: 1.25,
                       ),
                     ),
@@ -748,7 +747,7 @@ class BlogPreview extends StatelessWidget {
   final String title;
   final String body;
 
-  static const _iconColor = Color(0xFF2B2B2B);
+  static const dark = Color(0xFF2B2B2B);
 
   @override
   Widget build(BuildContext context) {
@@ -780,7 +779,7 @@ class BlogPreview extends StatelessWidget {
                         fontSize: 12,
                         fontWeight: FontWeight.w800,
                         fontFamily: "Inter",
-                        color: _iconColor,
+                        color: dark,
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -793,7 +792,7 @@ class BlogPreview extends StatelessWidget {
                           fontSize: 10.5,
                           fontWeight: FontWeight.w600,
                           fontFamily: "Inter",
-                          color: _iconColor,
+                          color: dark,
                           height: 1.25,
                         ),
                       ),
@@ -801,11 +800,11 @@ class BlogPreview extends StatelessWidget {
                     const SizedBox(height: 6),
                     Row(
                       children: const [
-                        Icon(Icons.favorite_border, size: 16, color: _iconColor),
+                        Icon(Icons.favorite_border, size: 16, color: dark),
                         SizedBox(width: 10),
-                        Icon(Icons.chat_bubble_outline, size: 16, color: _iconColor),
+                        Icon(Icons.chat_bubble_outline, size: 16, color: dark),
                         Spacer(),
-                        Icon(Icons.bookmark_border, size: 16, color: _iconColor),
+                        Icon(Icons.bookmark_border, size: 16, color: dark),
                       ],
                     ),
                   ],

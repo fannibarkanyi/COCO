@@ -16,9 +16,9 @@ class CreatingPage extends StatefulWidget {
 }
 
 class _CreatingPageState extends State<CreatingPage> {
-  static const _iconColor = Color(0xFF2B2B2B);
+  static const dark = Color(0xFF2B2B2B);
   // ignore: unused_field
-  static const _pageBg = Color(0xFFEBEBEB);
+  static const bg = Color(0xFFEBEBEB);
 
   bool hasUploadedPhoto = false;
   final ImagePicker _picker = ImagePicker();
@@ -54,7 +54,7 @@ Future<void> _pickFromGallery() async {
     showModalBottomSheet(
       context: context,
       showDragHandle: true,
-      backgroundColor: Colors.white,
+      backgroundColor: bg,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
       ),
@@ -66,12 +66,12 @@ Future<void> _pickFromGallery() async {
               mainAxisSize: MainAxisSize.min,
               children: [
                 ListTile(
-                  leading: const Icon(Icons.upload_file, color: _iconColor),
+                  leading: const Icon(Icons.upload_file, color: dark),
                   title: const Text(
                     "Upload from device",
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      color: _iconColor,
+                      color: dark,
                       fontFamily: "Inter",
                     ),
                   ),
@@ -81,12 +81,12 @@ Future<void> _pickFromGallery() async {
 },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.auto_awesome, color: _iconColor),
+                  leading: const Icon(Icons.auto_awesome, color: dark),
                   title: const Text(
                     "Generate with AI",
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      color: _iconColor,
+                      color: dark,
                       fontFamily: "Inter",
                     ),
                   ),
@@ -153,7 +153,7 @@ Future<void> _pickFromGallery() async {
           return Stack(
             children: [
               Positioned.fill(
-                child: Container(color: const Color.fromRGBO(235, 235, 235, 1)),
+                child: Container(color: bg),
               ),
 
               // TOP SVG
@@ -190,7 +190,7 @@ Future<void> _pickFromGallery() async {
                                 child: Icon(
                                   Icons.chevron_left,
                                   size: 35,
-                                  color: _iconColor,
+                                  color: dark,
                                 ),
                               ),
                             ),
@@ -201,7 +201,7 @@ Future<void> _pickFromGallery() async {
                                 fontSize: 35,
                                 fontWeight: FontWeight.w800,
                                 fontFamily: "Inter",
-                                color: _iconColor,
+                                color: dark,
                               ),
                             ),
                           ],
@@ -230,7 +230,7 @@ Future<void> _pickFromGallery() async {
                                   borderRadius: BorderRadius.circular(18),
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: const Color.fromRGBO(165, 197, 160, 1),
+                                      color: const Color(0xFFA5C5A0),
                                       borderRadius: BorderRadius.circular(18),
                                       boxShadow: [
                                         // BoxShadow(
@@ -241,56 +241,56 @@ Future<void> _pickFromGallery() async {
                                       ],
                                     ),
                                     child: ClipRRect(
-  borderRadius: BorderRadius.circular(18),
-  child: Stack(
-    fit: StackFit.expand,
-    children: [
-      // ✅ image preview
-      if (_selectedImage != null)
-        Image.file(
-          _selectedImage!,
-          fit: BoxFit.cover,
-        ),
+                                      borderRadius: BorderRadius.circular(18),
+                                      child: Stack(
+                                        fit: StackFit.expand,
+                                        children: [
+                                          // ✅ image preview
+                                          if (_selectedImage != null)
+                                            Image.file(
+                                              _selectedImage!,
+                                              fit: BoxFit.cover,
+                                            ),
 
-      // ✅ dashed border + overlay content
-      CustomPaint(
-        painter: _DashedBorderPainter(
-          color: const Color.fromRGBO(43, 43, 43, 1),
-          radius: 18,
-          strokeWidth: 2,
-          dashLength: 8,
-          gapLength: 6,
-        ),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                _selectedImage == null
-                    ? Icons.add_photo_alternate_outlined
-                    : Icons.check_circle_outline,
-                size: 78,
-                color: _iconColor,
-              ),
-              const SizedBox(height: 10),
-              Text(
-                _selectedImage == null
-                    ? "Add media or generate with AI"
-                    : "Photo added ✓",
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: _iconColor,
-                  fontFamily: "Inter",
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ],
-  ),
-),
+                                          // ✅ dashed border + overlay content
+                                          CustomPaint(
+                                            painter: _DashedBorderPainter(
+                                              color: dark,
+                                              radius: 18,
+                                              strokeWidth: 2,
+                                              dashLength: 8,
+                                              gapLength: 6,
+                                            ),
+                                            child: Center(
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Icon(
+                                                    _selectedImage == null
+                                                        ? Icons.add_photo_alternate_outlined
+                                                        : Icons.check_circle_outline,
+                                                    size: 78,
+                                                    color: dark,
+                                                  ),
+                                                  const SizedBox(height: 10),
+                                                  Text(
+                                                    _selectedImage == null
+                                                        ? "Add media or generate with AI"
+                                                        : "Photo added ✓",
+                                                    style: const TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight: FontWeight.w600,
+                                                      color: dark,
+                                                      fontFamily: "Inter",
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -312,8 +312,8 @@ Future<void> _pickFromGallery() async {
                               child: OutlinedButton(
                                 onPressed: _goToPostDetails, // ✅ Skip always works
                                 style: OutlinedButton.styleFrom(
-                                  foregroundColor: _iconColor,
-                                  side: const BorderSide(color: _iconColor, width: 1.2),
+                                  foregroundColor: dark,
+                                  side: const BorderSide(color: dark, width: 1.2),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -335,8 +335,8 @@ Future<void> _pickFromGallery() async {
                               child: ElevatedButton(
                                 onPressed: hasUploadedPhoto ? _onNext : null, // ✅ gated
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color.fromRGBO(43, 43, 43, 1),
-                                  foregroundColor: const Color.fromRGBO(235, 235, 235, 1),
+                                  backgroundColor: dark,
+                                  foregroundColor: bg,
                                   disabledBackgroundColor:
                                       const Color.fromRGBO(43, 43, 43, 0.35),
                                   disabledForegroundColor:

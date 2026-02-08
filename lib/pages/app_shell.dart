@@ -4,6 +4,7 @@ import 'home_page.dart';
 import 'profile_page.dart';
 import 'statistics_page.dart';
 import '../widgets/bottom_nav.dart';
+import 'messages.dart';
 
 class AppShell extends StatefulWidget {
   final int initialIndex;
@@ -19,7 +20,7 @@ class _AppShellState extends State<AppShell> {
   final List<Widget> pages = const [
     HomePage(),
     StatisticsPage(),
-    Placeholder(),
+    Messages(),
     ProfilePage(),
   ];
 
