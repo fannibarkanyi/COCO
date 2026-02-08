@@ -69,24 +69,24 @@ class HomePage extends StatelessWidget {
               children: [
                 // HEADER
                 const Padding(
-                  padding: EdgeInsets.fromLTRB(24, 24, 24, 0),
+                  padding: EdgeInsets.fromLTRB(24, 30, 24, 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         "Home",
                         style: TextStyle(
-                          fontSize: 36,
+                          fontSize: 35,
                           fontWeight: FontWeight.w700,
                           fontFamily: "Inter",
                           color: Color.fromRGBO(43, 43, 43, 1),
                         ),
                       ),
-                      SizedBox(height: 6),
+                      SizedBox(height: 8),
                       Text(
                         "Start growing your business today",
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 18,
                           fontWeight: FontWeight.w500,
                           fontFamily: "Inter",
                           color: Color.fromRGBO(43, 43, 43, 1),
@@ -104,7 +104,7 @@ class HomePage extends StatelessWidget {
                   child: Material(
                     color: Colors.transparent,
                     child: InkWell(
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(10),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -116,10 +116,10 @@ class HomePage extends StatelessWidget {
                       child: Container(
                         width: double.infinity,
                         height: 120,
-                        padding: const EdgeInsets.all(18),
+                        padding: const EdgeInsets.all(15),
                         decoration: BoxDecoration(
                           color: darkCard,
-                          borderRadius: BorderRadius.circular(18),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         child: Row(
                           children: [
@@ -132,8 +132,8 @@ class HomePage extends StatelessWidget {
                                     "Create a",
                                     style: TextStyle(
                                       color: bg,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w500,
                                       fontFamily: "Inter",
                                     ),
                                   ),
@@ -141,10 +141,10 @@ class HomePage extends StatelessWidget {
                                     "Post",
                                     style: TextStyle(
                                       color: bg,
-                                      fontSize: 38,
-                                      fontWeight: FontWeight.w800,
+                                      fontSize: 50,
+                                      fontWeight: FontWeight.w500,
                                       fontFamily: "Inter",
-                                      height: 0.95,
+                                      height: 0.4,
                                     ),
                                   ),
                                   Text(
@@ -153,7 +153,7 @@ class HomePage extends StatelessWidget {
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       color: bg,
-                                      fontSize: 11,
+                                      fontSize: 10,
                                       fontWeight: FontWeight.w500,
                                       fontFamily: "Inter",
                                     ),
@@ -287,25 +287,25 @@ class _SmallCard extends StatelessWidget {
           Text(
             titleTop,
             style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
+              fontSize: 25,
+              fontWeight: FontWeight.w500,
               fontFamily: "Inter",
             ),
           ),
           Text(
             titleBig,
             style: const TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.w800,
+              fontSize: 35,
+              fontWeight: FontWeight.w500,
               fontFamily: "Inter",
               height: 1.0,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           Text(
             subtitle,
             style: const TextStyle(
-              fontSize: 12,
+              fontSize: 10,
               fontWeight: FontWeight.w500,
               fontFamily: "Inter",
               height: 1.2,
