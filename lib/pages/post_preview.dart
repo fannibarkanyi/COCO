@@ -1,13 +1,14 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: use_build_context_synchronously, deprecated_member_use
 
 import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/bottom_nav.dart';
 import 'app_shell.dart';
+import 'activity_page.dart';
 
 class PostPreviewChoosePage extends StatefulWidget {
   const PostPreviewChoosePage({
@@ -232,9 +233,46 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
                       width: 120,
                       height: 42,
                       child: ElevatedButton(
-                        onPressed: () {
-                          // later: create post + go to activity page etc
-                        },
+                        onPressed: () async {
+  final type = selected == 0 ? "story" : selected == 1 ? "post" : "blog";
+
+  // 1) Save record
+  await FirebaseFirestore.instance.collection("activity").add({
+    "type": type,
+    "imagePath": widget.imagePath, // local path for now
+    "caption": widget.caption,
+    "description": widget.description,
+    "location": widget.location,
+    "music": widget.music,
+    "createdAt": FieldValue.serverTimestamp(),
+  });
+
+  // 2) Popup success
+  if (!mounted) return;
+  showDialog(
+    // ignore: duplicate_ignore
+    // ignore: use_build_context_synchronously
+    context: context,
+    builder: (_) => AlertDialog(
+      title: Text("${type[0].toUpperCase()}${type.substring(1)} successfully posted!"),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text("OK"),
+        ),
+      ],
+    ),
+  ).then((_) {
+    // 3) Go to Activity page after popup closes
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => const ActivityPage()),
+      (route) => false,
+    );
+  });
+},
+
+
                         style: ElevatedButton.styleFrom(
                           backgroundColor: _iconColor,
                           foregroundColor: _bg,

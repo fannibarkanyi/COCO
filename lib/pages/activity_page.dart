@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
 
 class ActivityPage extends StatefulWidget {
   const ActivityPage({super.key});
@@ -10,6 +12,26 @@ class ActivityPage extends StatefulWidget {
 
 class _ActivityPageState extends State<ActivityPage> {
   int _tabIndex = 0; // 0 = Posts, 1 = Blogs
+
+  late final Widget _topSvg;
+  late final Widget _bottomSvg;
+
+  @override
+void initState() {
+  super.initState();
+
+  _topSvg = SvgPicture.asset(
+    'assets/activity_top.svg',
+    fit: BoxFit.fitWidth,
+    alignment: Alignment.topLeft,
+  );
+
+  _bottomSvg = SvgPicture.asset(
+    'assets/activity_bottom.svg',
+    fit: BoxFit.cover,
+    alignment: Alignment.bottomCenter,
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -48,11 +70,7 @@ class _ActivityPageState extends State<ActivityPage> {
                 right: 0,
                 child: SizedBox(
                   height: topSvgHeight,
-                  child: SvgPicture.asset(
-                    'assets/activity_top.svg',
-                    fit: BoxFit.fitWidth,
-                    alignment: Alignment.topLeft,
-                  ),
+                  child: _topSvg,
                 ),
               ),
 
@@ -63,11 +81,7 @@ class _ActivityPageState extends State<ActivityPage> {
                 bottom: 0,
                 child: SizedBox(
                   height: bottomSvgHeight,
-                  child: SvgPicture.asset(
-                    'assets/activity_bottom.svg',
-                    fit: BoxFit.cover,
-                    alignment: Alignment.bottomCenter,
-                  ),
+                  child: _bottomSvg,
                 ),
               ),
 
@@ -124,23 +138,64 @@ class _ActivityPageState extends State<ActivityPage> {
 
                 SizedBox(height: clamp(h * 0.015, 10, 14)),
 
-                // Stories row (placeholders)
+                // Stories row 
                 SizedBox(
-                  height: clamp(h * 0.105, 72, 96),
-                  child: ListView.separated(
-                    padding: EdgeInsets.symmetric(horizontal: horizontalPad),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 4,
-                    separatorBuilder: (_, __) => SizedBox(width: clamp(w * 0.03, 10, 14)),
-                    itemBuilder: (context, i) {
-                      return _PlusPlaceholder(
-                        width: clamp(w * 0.18, 64, 82),
-                        height: clamp(h * 0.105, 72, 96),
-                        radius: clamp(w * 0.045, 14, 18),
-                      );
-                    },
-                  ),
-                ),
+  height: clamp(h * 0.105, 72, 96),
+  child: StreamBuilder<QuerySnapshot>(
+    stream: FirebaseFirestore.instance
+        .collection("activity")
+        .where("type", isEqualTo: "story")
+        .orderBy("createdAt", descending: true)
+        .snapshots(),
+    builder: (context, snap) {
+      if (!snap.hasData) {
+        return const SizedBox();
+      }
+
+      final docs = snap.data!.docs;
+      if (docs.isEmpty) {
+        // first start: empty
+        return ListView.separated(
+          padding: EdgeInsets.symmetric(horizontal: horizontalPad),
+          scrollDirection: Axis.horizontal,
+          itemCount: 4,
+          separatorBuilder: (_, __) => SizedBox(width: clamp(w * 0.03, 10, 14)),
+          itemBuilder: (context, i) {
+            return _PlusPlaceholder(
+              width: clamp(w * 0.18, 64, 82),
+              height: clamp(h * 0.105, 72, 96),
+              radius: clamp(w * 0.045, 14, 18),
+            );
+          },
+        );
+      }
+
+      return ListView.separated(
+        padding: EdgeInsets.symmetric(horizontal: horizontalPad),
+        scrollDirection: Axis.horizontal,
+        itemCount: docs.length,
+        separatorBuilder: (_, __) => SizedBox(width: clamp(w * 0.03, 10, 14)),
+        itemBuilder: (context, i) {
+          final data = docs[i].data() as Map<String, dynamic>;
+          final path = (data["imagePath"] ?? "") as String;
+
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(clamp(w * 0.045, 14, 18)),
+            child: Container(
+              width: clamp(w * 0.18, 64, 82),
+              height: clamp(h * 0.105, 72, 96),
+              color: Colors.white,
+              child: path.isEmpty
+                  ? const Icon(Icons.image)
+                  : Image.file(File(path), fit: BoxFit.cover),
+            ),
+          );
+        },
+      );
+    },
+  ),
+),
+
 
                 SizedBox(height: clamp(h * 0.02, 12, 18)),
 
@@ -159,25 +214,115 @@ class _ActivityPageState extends State<ActivityPage> {
 
                 // Body changes based on tab (empty states only)
                 Expanded(
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 250),
-                    child: _tabIndex == 0
-                        ? _EmptyCard(
-                            key: const ValueKey('posts'),
-                            horizontalPad: horizontalPad,
-                            radius: cardRadius,
-                            dark: dark,
-                            text: 'No posts yet',
-                          )
-                        : _EmptyCard(
-                            key: const ValueKey('blogs'),
-                            horizontalPad: horizontalPad,
-                            radius: cardRadius,
-                            dark: dark,
-                            text: 'No blogs posted yet!',
-                          ),
+  child: StreamBuilder<QuerySnapshot>(
+    key: ValueKey(_tabIndex), // ✅ force clean rebuild when tab changes
+    stream: FirebaseFirestore.instance
+        .collection("activity")
+        .where("type", isEqualTo: _tabIndex == 0 ? "post" : "blog")
+        .orderBy("createdAt", descending: true)
+        .snapshots(),
+    builder: (context, snap) {
+      if (snap.hasError) {
+        return Center(
+          child: Text(
+            "Firestore error:\n${snap.error}",
+            textAlign: TextAlign.center,
+          ),
+        );
+      }
+
+      if (!snap.hasData) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      final docs = snap.data!.docs;
+
+      if (docs.isEmpty) {
+        return _EmptyCard(
+          horizontalPad: horizontalPad,
+          radius: cardRadius,
+          dark: dark,
+          text: _tabIndex == 0 ? "No posts yet" : "No blogs posted yet!",
+        );
+      }
+
+      return ListView.separated(
+        padding: EdgeInsets.fromLTRB(
+          horizontalPad,
+          clamp(w * 0.02, 6, 10),
+          horizontalPad,
+          clamp(w * 0.12, 28, 44),
+        ),
+        itemCount: docs.length,
+        separatorBuilder: (_, __) => const SizedBox(height: 12),
+        itemBuilder: (context, i) {
+          final data = docs[i].data() as Map<String, dynamic>;
+          final caption = (data["caption"] ?? "") as String;
+          // ignore: unused_local_variable
+          final path = (data["imagePath"] ?? "") as String;
+          final file = File(path);
+
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(cardRadius),
+              border: Border.all(color: Colors.black12),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // header row (platform icon + caption)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
+                  child: Row(
+                    children: [
+                      Icon(
+                        _tabIndex == 0 ? Icons.facebook : Icons.article,
+                        size: 18,
+                        color: dark,
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          caption.isEmpty ? "(no caption)" : caption,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontWeight: FontWeight.w700, color: dark),
+                        ),
+                      ),
+                      const Icon(Icons.more_horiz),
+                    ],
                   ),
                 ),
+
+                // image
+               AspectRatio(
+  aspectRatio: 16 / 10,
+  child: path.isEmpty || !file.existsSync()
+      ? Container(color: const Color(0xFFEAEAEA))
+      : ClipRRect(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(cardRadius),
+            bottomRight: Radius.circular(cardRadius),
+          ),
+          child: Image.file(
+            file,
+            fit: BoxFit.cover,
+
+            // ✅ HUGE: prevents decoding full-size 12MP images every rebuild
+            cacheWidth: (MediaQuery.of(context).size.width * 2).round(),
+          ),
+        ),
+),
+              ],
+            ),
+          );
+        },
+      );
+    },
+  ),
+),
+
 
                 // little breathing room at bottom
                 SizedBox(height: clamp(h * 0.02, 10, 18)),
@@ -192,6 +337,7 @@ class _ActivityPageState extends State<ActivityPage> {
 
 class _EmptyCard extends StatelessWidget {
   const _EmptyCard({
+    // ignore: unused_element_parameter
     super.key,
     required this.horizontalPad,
     required this.radius,
