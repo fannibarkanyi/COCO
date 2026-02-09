@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -125,28 +127,28 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                     ],
                   ),
 
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 60),
 
                   _InputField(
                     controller: captionCtrl,
                     hint: "Add caption",
                     maxLines: 1,
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
 
                   _InputField(
                     controller: descCtrl,
                     hint: "Add description*",
                     maxLines: 4,
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
 
                   _InputField(
                     controller: locationCtrl,
                     hint: "Add location",
                     maxLines: 1,
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
 
                   _InputField(
                     controller: musicCtrl,
@@ -154,7 +156,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                     maxLines: 1,
                   ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   const Text(
                     "Or",
                     style: TextStyle(
@@ -183,20 +185,20 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                       child: const Text(
                         "Generate text with AI",
                         style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
                           fontFamily: "Inter",
                         ),
                       ),
                     ),
                   ),
 
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 30),
 
                   const Text(
                     "Publish on..",
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 16,
                       fontWeight: FontWeight.w600,
                       fontFamily: "Inter",
                       color: dark,
@@ -242,13 +244,13 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                     ],
                   ),
 
-                  const SizedBox(height: 22),
+                  const SizedBox(height: 50),
 
                   // NEXT BUTTON 
                   Center(
                     child: SizedBox(
-                      width: mathMin(160.0, w * 0.46),
-                      height: 44,
+                      width: 108,
+                      height: 52,
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.push(
@@ -277,18 +279,14 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                         child: const Text(
                           "Next",
                           style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w800,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
                             fontFamily: "Inter",
                           ),
                         ),
                       ),
                     ),
                   ),
-
-
-                  // a little extra so it feels like the mock (big airy bottom)
-                  SizedBox(height: h * 0.04),
                 ],
               ),
             ),

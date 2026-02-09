@@ -177,7 +177,7 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
                     ],
                   ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 30),
 
                   // Segmented buttons
                   _SegmentedTabs(
@@ -185,7 +185,7 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
                     onChanged: (i) => setState(() => selected = i),
                   ),
 
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
 
                   // ✅ Preview area (ratio always preserved)
                   Expanded(
@@ -210,7 +210,7 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
                     ),
                   ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 20),
 
                   // Helper text
                   Center(
@@ -227,56 +227,56 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
                     ),
                   ),
 
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
 
                   // Choose button
                   Center(
                     child: SizedBox(
-                      width: 120,
-                      height: 42,
+                      width: 108,
+                      height: 52,
                       child: ElevatedButton(
                         onPressed: () async {
-  final type = selected == 0 ? "story" : selected == 1 ? "post" : "blog";
+                          final type = selected == 0 ? "story" : selected == 1 ? "post" : "blog";
 
-  // 1) Save record
-  await FirebaseFirestore.instance.collection("activity").add({
-    "type": type,
-    "imagePath": widget.imagePath, // local path for now
-    "caption": widget.caption,
-    "description": widget.description,
-    "location": widget.location,
-    "music": widget.music,
-    "platforms": widget.platforms,
-    "createdAt": FieldValue.serverTimestamp(),
-  });
+                          // 1) Save record
+                          await FirebaseFirestore.instance.collection("activity").add({
+                            "type": type,
+                            "imagePath": widget.imagePath, // local path for now
+                            "caption": widget.caption,
+                            "description": widget.description,
+                            "location": widget.location,
+                            "music": widget.music,
+                            "platforms": widget.platforms,
+                            "createdAt": FieldValue.serverTimestamp(),
+                          });
 
-  // 2) Popup success
-  if (!mounted) return;
-  showDialog(
-    // ignore: duplicate_ignore
-    // ignore: use_build_context_synchronously
-    context: context,
-    builder: (_) => AlertDialog(
-      title: Text("${type[0].toUpperCase()}${type.substring(1)} successfully posted!"),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text("OK"),
-        ),
-      ],
-    ),
-  ).then((_) {
-    // 3) Go to Activity page after popup closes
-    Navigator.of(context).pushAndRemoveUntil(
-    MaterialPageRoute(builder: (_) => const AppShell(initialIndex: 0)),
-    (route) => false,
-  );
+                          // 2) Popup success
+                          if (!mounted) return;
+                          showDialog(
+                            // ignore: duplicate_ignore
+                            // ignore: use_build_context_synchronously
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: Text("${type[0].toUpperCase()}${type.substring(1)} successfully posted!"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text("OK"),
+                                ),
+                              ],
+                            ),
+                          ).then((_) {
+                            // 3) Go to Activity page after popup closes
+                            Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(builder: (_) => const AppShell(initialIndex: 0)),
+                            (route) => false,
+                          );
 
-  Navigator.of(context).push(
-    MaterialPageRoute(builder: (_) => const ActivityPage()),
-  );
-  });
-},
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => const ActivityPage()),
+                          );
+                          });
+                        },
 
 
                         style: ElevatedButton.styleFrom(
@@ -290,8 +290,8 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
                         child: const Text(
                           "Choose",
                           style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w800,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
                             fontFamily: "Inter",
                           ),
                         ),

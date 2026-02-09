@@ -299,7 +299,7 @@ Future<void> _pickFromGallery() async {
                         ),
                       ),
 
-                      const SizedBox(height: 14),
+                      // const SizedBox(height: 3),
 
                       // Buttons
                       Padding(
@@ -322,7 +322,7 @@ Future<void> _pickFromGallery() async {
                                 child: const Text(
                                   "Skip",
                                   style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 18,
                                     fontWeight: FontWeight.w700,
                                     fontFamily: "Inter",
                                   ),
@@ -350,7 +350,7 @@ Future<void> _pickFromGallery() async {
                                 child: const Text(
                                   "Next",
                                   style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 18,
                                     fontWeight: FontWeight.w700,
                                     fontFamily: "Inter",
                                   ),

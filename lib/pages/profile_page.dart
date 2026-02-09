@@ -262,7 +262,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             Text(
                               name,
                               style: const TextStyle(
-                                fontSize: 16,
+                                fontSize: 22,
                                 fontWeight: FontWeight.w700,
                                 fontFamily: "Inter",
                                 color: dark,
@@ -312,19 +312,19 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
 
-                      const SizedBox(height: 22),
+                      const SizedBox(height: 30),
 
                       const Text(
                         "Social media",
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 20,
                           fontWeight: FontWeight.w700,
                           fontFamily: "Inter",
                           color: dark,
                         ),
                       ),
 
-                      const SizedBox(height: 14),
+                      const SizedBox(height: 16),
 
                       IntrinsicHeight(
                         child: Row(
@@ -451,21 +451,21 @@ class _ProfilePageState extends State<ProfilePage> {
     if (photoUrl != null && photoUrl!.isNotEmpty) {
       return Image.network(
         photoUrl!,
-        width: 72,
-        height: 72,
+        width: 96,
+        height: 96,
         fit: BoxFit.cover,
         errorBuilder: (_, __, ___) => Image.asset(
           'assets/profile_pic.png',
-          width: 72,
-          height: 72,
+          width: 96,
+          height: 96,
           fit: BoxFit.cover,
         ),
       );
     }
     return Image.asset(
       'assets/profile_pic.png',
-      width: 72,
-      height: 72,
+      width: 96,
+      height: 96,
       fit: BoxFit.cover,
     );
   }
@@ -493,7 +493,7 @@ class _InfoRow extends StatelessWidget {
           Text(
             label,
             style: const TextStyle(
-              fontSize: 12,
+              fontSize: 16,
               fontWeight: FontWeight.w600,
               fontFamily: "Inter",
               color: dark,
@@ -503,7 +503,7 @@ class _InfoRow extends StatelessWidget {
           Text(
             value,
             style: const TextStyle(
-              fontSize: 12,
+              fontSize: 14,
               fontWeight: FontWeight.w500,
               fontFamily: "Inter",
               color: dark,
