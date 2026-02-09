@@ -50,7 +50,7 @@ class HelpPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header row (back + title)
+                  // Header row
                   Row(
                     children: [
                       InkWell(

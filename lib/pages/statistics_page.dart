@@ -80,7 +80,6 @@ class _StatisticsPageState extends State<StatisticsPage> {
 
                   const SizedBox(height: 20),
 
-                  // Chips row (✅ now clickable)
                   SizedBox(
                     height: 46,
                     child: ListView(
@@ -119,7 +118,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
 
                   const SizedBox(height: 18),
 
-                  // Stats grid (taller cards)
+                  // Stats grid 
                   Row(
                     children: [
                       const Expanded(
@@ -173,8 +172,6 @@ class _StatisticsPageState extends State<StatisticsPage> {
   }
 }
 
-/* ---------------- Dropdown ---------------- */
-
 class _MonthDropdown extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
@@ -208,8 +205,6 @@ class _MonthDropdown extends StatelessWidget {
     );
   }
 }
-
-/* ---------------- Chips ---------------- */
 
 class _AppChip extends StatelessWidget {
   final String label;
@@ -259,8 +254,6 @@ class _AppChip extends StatelessWidget {
     );
   }
 }
-
-/* ---------------- Stat Card ---------------- */
 
 class _StatCard extends StatelessWidget {
   final String bigText;
@@ -321,8 +314,6 @@ class _StatCard extends StatelessWidget {
     );
   }
 }
-
-/* ---------------- Discovery Card ---------------- */
 
 class _DiscoveryCard extends StatelessWidget {
   const _DiscoveryCard();

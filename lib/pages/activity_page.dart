@@ -17,16 +17,14 @@ class _ActivityPageState extends State<ActivityPage> {
   Future<void> _deleteActivityDoc(QueryDocumentSnapshot doc) async {
   final data = doc.data() as Map<String, dynamic>;
 
-  // Prefer storing this when you upload to Firebase Storage:
   final storagePath = (data["storagePath"] ?? "") as String;
 
   try {
-    // 1) delete storage file (if any)
+  
     if (storagePath.isNotEmpty) {
       await FirebaseStorage.instance.ref(storagePath).delete();
     }
 
-    // 2) delete firestore doc
     await doc.reference.delete();
   } catch (e) {
     if (!mounted) return;
@@ -56,8 +54,7 @@ class _ActivityPageState extends State<ActivityPage> {
 Widget _platformIcons(List<String> platforms, Color color) {
   if (platforms.isEmpty) return const SizedBox.shrink();
 
-  // show up to 3 icons to keep it clean
-  final shown = platforms.take(3);
+  final shown = platforms.take(5);
 
   return Row(
     mainAxisSize: MainAxisSize.min,
@@ -151,7 +148,7 @@ void initState() {
               children: [
                 SizedBox(height: clamp(h * 0.012, 8, 14)),
 
-                // Back + Title on the same row: "< Activity"
+                // Back + Activity
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: horizontalPad),
                   child: Row(
@@ -181,7 +178,6 @@ void initState() {
                   ),
                 ),
 
-                // Push everything BELOW title down a bit (as you asked)
                 SizedBox(height: clamp(h * 0.035, 20, 28)),
 
                 Padding(
@@ -200,108 +196,108 @@ void initState() {
 
                 // Stories row 
                 SizedBox(
-  height: clamp(h * 0.105, 72, 96),
-  child: StreamBuilder<QuerySnapshot>(
-    stream: FirebaseFirestore.instance
-        .collection("activity")
-        .where("type", isEqualTo: "story")
-        .orderBy("createdAt", descending: true)
-        .snapshots(),
-    builder: (context, snap) {
-      if (!snap.hasData) return const SizedBox();
+                  height: clamp(h * 0.105, 72, 96),
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection("activity")
+                        .where("type", isEqualTo: "story")
+                        .orderBy("createdAt", descending: true)
+                        .snapshots(),
+                    builder: (context, snap) {
+                      if (!snap.hasData) return const SizedBox();
 
-      final docs = snap.data!.docs;
+                      final docs = snap.data!.docs;
 
-      // Empty state (placeholders)
-      if (docs.isEmpty) {
-        return ListView.separated(
-          padding: EdgeInsets.symmetric(horizontal: horizontalPad),
-          scrollDirection: Axis.horizontal,
-          itemCount: 4,
-          separatorBuilder: (_, __) => SizedBox(width: clamp(w * 0.03, 10, 14)),
-          itemBuilder: (context, i) {
-            return _PlusPlaceholder(
-              width: clamp(w * 0.18, 64, 82),
-              height: clamp(h * 0.105, 72, 96),
-              radius: clamp(w * 0.045, 14, 18),
-            );
-          },
-        );
-      }
+                      // Empty state placeholders
+                      if (docs.isEmpty) {
+                        return ListView.separated(
+                          padding: EdgeInsets.symmetric(horizontal: horizontalPad),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 4,
+                          separatorBuilder: (_, __) => SizedBox(width: clamp(w * 0.03, 10, 14)),
+                          itemBuilder: (context, i) {
+                            return _PlusPlaceholder(
+                              width: clamp(w * 0.18, 64, 82),
+                              height: clamp(h * 0.105, 72, 96),
+                              radius: clamp(w * 0.045, 14, 18),
+                            );
+                          },
+                        );
+                      }
 
-      // Normal list
-      return ListView.separated(
-        padding: EdgeInsets.symmetric(horizontal: horizontalPad),
-        scrollDirection: Axis.horizontal,
-        itemCount: docs.length,
-        separatorBuilder: (_, __) => SizedBox(width: clamp(w * 0.03, 10, 14)),
-        itemBuilder: (context, i) {
-          final doc = docs[i];
-          final data = doc.data() as Map<String, dynamic>;
-          final path = (data["imagePath"] ?? "") as String;
+                    // Normal list
+                    return ListView.separated(
+                      padding: EdgeInsets.symmetric(horizontal: horizontalPad),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: docs.length,
+                      separatorBuilder: (_, __) => SizedBox(width: clamp(w * 0.03, 10, 14)),
+                      itemBuilder: (context, i) {
+                        final doc = docs[i];
+                        final data = doc.data() as Map<String, dynamic>;
+                        final path = (data["imagePath"] ?? "") as String;
 
-          final tileW = clamp(w * 0.18, 64, 82).toDouble();
-          final tileH = clamp(h * 0.105, 72, 96).toDouble();
-          final radius = clamp(w * 0.045, 14, 18).toDouble();
+                        final tileW = clamp(w * 0.18, 64, 82).toDouble();
+                        final tileH = clamp(h * 0.105, 72, 96).toDouble();
+                        final radius = clamp(w * 0.045, 14, 18).toDouble();
 
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(radius),
-            child: SizedBox(
-              width: tileW,
-              height: tileH,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  // Image / placeholder
-                  Container(
-                    color: bg,
-                    child: path.isEmpty
-                        ? const Icon(Icons.image)
-                        : Image.file(File(path), fit: BoxFit.cover),
-                  ),
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(radius),
+                          child: SizedBox(
+                            width: tileW,
+                            height: tileH,
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                // Image 
+                                Container(
+                                  color: bg,
+                                  child: path.isEmpty
+                                      ? const Icon(Icons.image)
+                                      : Image.file(File(path), fit: BoxFit.cover),
+                                ),
 
-                  // 3-dot menu (top-right)
-                  Positioned(
-                    top: 2,
-                    right: 2,
-                    child: PopupMenuButton<String>(
-                      padding: EdgeInsets.zero,
-                      iconSize: 22,
-                      icon: Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          // ignore: deprecated_member_use
-                          color: Colors.black.withOpacity(0.25),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Icon(
-                          Icons.more_horiz,
-                          size: 18,
-                          color: Color(0xFFEBEBEB),
-                        ),
-                      ),
-                      onSelected: (value) async {
-                        if (value == "delete") {
-                          await _deleteActivityDoc(doc);
-                        }
+                                // Options
+                                Positioned(
+                                  top: 2,
+                                  right: 2,
+                                  child: PopupMenuButton<String>(
+                                    padding: EdgeInsets.zero,
+                                    iconSize: 22,
+                                    icon: Container(
+                                      padding: const EdgeInsets.all(2),
+                                      decoration: BoxDecoration(
+                                        // ignore: deprecated_member_use
+                                        color: Colors.black.withOpacity(0.25),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: const Icon(
+                                        Icons.more_horiz,
+                                        size: 18,
+                                        color: Color(0xFFEBEBEB),
+                                      ),
+                                    ),
+                                    onSelected: (value) async {
+                                      if (value == "delete") {
+                                        await _deleteActivityDoc(doc);
+                                      }
+                                    },
+                                    itemBuilder: (_) => const [
+                                      PopupMenuItem(
+                                        value: "delete",
+                                        child: Text("Delete"),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
                       },
-                      itemBuilder: (_) => const [
-                        PopupMenuItem(
-                          value: "delete",
-                          child: Text("Delete"),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                    );
+                  },
+                ),
               ),
-            ),
-          );
-        },
-      );
-    },
-  ),
-),
 
 
 
@@ -320,134 +316,132 @@ void initState() {
 
                 SizedBox(height: clamp(h * 0.015, 10, 14)),
 
-                // Body changes based on tab (empty states only)
+                // Switching
                 Expanded(
-  child: StreamBuilder<QuerySnapshot>(
-    key: ValueKey(_tabIndex), // ✅ force clean rebuild when tab changes
-    stream: FirebaseFirestore.instance
-        .collection("activity")
-        .where("type", isEqualTo: _tabIndex == 0 ? "post" : "blog")
-        .orderBy("createdAt", descending: true)
-        .snapshots(),
-    builder: (context, snap) {
-      if (snap.hasError) {
-        return Center(
-          child: Text(
-            "Firestore error:\n${snap.error}",
-            textAlign: TextAlign.center,
-          ),
-        );
-      }
+                  child: StreamBuilder<QuerySnapshot>(
+                    key: ValueKey(_tabIndex), 
+                    stream: FirebaseFirestore.instance
+                        .collection("activity")
+                        .where("type", isEqualTo: _tabIndex == 0 ? "post" : "blog")
+                        .orderBy("createdAt", descending: true)
+                        .snapshots(),
+                    builder: (context, snap) {
+                      if (snap.hasError) {
+                        return Center(
+                          child: Text(
+                            "Firestore error:\n${snap.error}",
+                            textAlign: TextAlign.center,
+                          ),
+                        );
+                      }
 
-      if (!snap.hasData) {
-        return const Center(child: CircularProgressIndicator());
-      }
+                      if (!snap.hasData) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
 
-      final docs = snap.data!.docs;
+                      final docs = snap.data!.docs;
 
-      if (docs.isEmpty) {
-        return _EmptyCard(
-          horizontalPad: horizontalPad,
-          radius: cardRadius,
-          dark: dark,
-          text: _tabIndex == 0 ? "No posts yet" : "No blogs posted yet!",
-        );
-      }
+                      if (docs.isEmpty) {
+                        return _EmptyCard(
+                          horizontalPad: horizontalPad,
+                          radius: cardRadius,
+                          dark: dark,
+                          text: _tabIndex == 0 ? "No posts yet" : "No blogs posted yet!",
+                        );
+                      }
 
-      return ListView.separated(
-        padding: EdgeInsets.fromLTRB(
-          horizontalPad,
-          clamp(w * 0.02, 6, 10),
-          horizontalPad,
-          clamp(w * 0.12, 28, 44),
-        ),
-        itemCount: docs.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 12),
-        itemBuilder: (context, i) {
-          final data = docs[i].data() as Map<String, dynamic>;
-          final caption = (data["caption"] ?? "") as String;
-          // ignore: unused_local_variable
-          final path = (data["imagePath"] ?? "") as String;
-          final file = File(path);
-          final platforms =
-      List<String>.from((data["platforms"] ?? const []) as List);
-
-          return Container(
-            decoration: BoxDecoration(
-              color: bg,
-              borderRadius: BorderRadius.circular(cardRadius),
-              border: Border.all(color: Colors.black12),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // header row (platform icon + caption)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
-                  child: Row(
-                    children: [
-                      platforms.isNotEmpty
-                          ? _platformIcons(platforms, dark)
-                          : Icon(
-                              _tabIndex == 0 ? Icons.image : Icons.article,
-                              size: 18,
-                              color: dark,
-                            ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          caption.isEmpty ? "(no caption)" : caption,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontWeight: FontWeight.w700, color: dark),
+                      return ListView.separated(
+                        padding: EdgeInsets.fromLTRB(
+                          horizontalPad,
+                          clamp(w * 0.02, 6, 10),
+                          horizontalPad,
+                          clamp(w * 0.12, 28, 44),
                         ),
-                      ),
-                      PopupMenuButton<String>(
-                        icon: const Icon(Icons.more_horiz),
-                        onSelected: (value) async {
-                          if (value == "delete") {
-                            await _deleteActivityDoc(docs[i]);
-                          }
-                        },
-                        itemBuilder: (_) => const [
-                          PopupMenuItem(value: "delete", child: Text("Delete")),
-                        ],
-                      ),
-                    ],
+                        itemCount: docs.length,
+                        separatorBuilder: (_, __) => const SizedBox(height: 12),
+                        itemBuilder: (context, i) {
+                          final data = docs[i].data() as Map<String, dynamic>;
+                          final caption = (data["caption"] ?? "") as String;
+                          // ignore: unused_local_variable
+                          final path = (data["imagePath"] ?? "") as String;
+                          final file = File(path);
+                          final platforms =
+                      List<String>.from((data["platforms"] ?? const []) as List);
+
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: bg,
+                              borderRadius: BorderRadius.circular(cardRadius),
+                              border: Border.all(color: Colors.black12),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // header row 
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
+                                  child: Row(
+                                    children: [
+                                      platforms.isNotEmpty
+                                          ? _platformIcons(platforms, dark)
+                                          : Icon(
+                                              _tabIndex == 0 ? Icons.image : Icons.article,
+                                              size: 18,
+                                              color: dark,
+                                            ),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Text(
+                                          caption.isEmpty ? "(no caption)" : caption,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(fontWeight: FontWeight.w700, color: dark),
+                                        ),
+                                      ),
+                                      PopupMenuButton<String>(
+                                        icon: const Icon(Icons.more_horiz),
+                                        onSelected: (value) async {
+                                          if (value == "delete") {
+                                            await _deleteActivityDoc(docs[i]);
+                                          }
+                                        },
+                                        itemBuilder: (_) => const [
+                                          PopupMenuItem(value: "delete", child: Text("Delete")),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+
+                    // image
+                  AspectRatio(
+                    aspectRatio: 16 / 10,
+                    child: path.isEmpty || !file.existsSync()
+                        ? Container(color: const Color(0xFFEAEAEA))
+                        : ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(cardRadius),
+                              bottomRight: Radius.circular(cardRadius),
+                            ),
+                            child: Image.file(
+                              file,
+                              fit: BoxFit.cover,
+
+                              // ✅ HUGE: prevents decoding full-size 12MP images every rebuild
+                              cacheWidth: (MediaQuery.of(context).size.width * 2).round(),
+                            ),
+                          ),
                   ),
-                ),
-
-
-                // image
-               AspectRatio(
-  aspectRatio: 16 / 10,
-  child: path.isEmpty || !file.existsSync()
-      ? Container(color: const Color(0xFFEAEAEA))
-      : ClipRRect(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(cardRadius),
-            bottomRight: Radius.circular(cardRadius),
-          ),
-          child: Image.file(
-            file,
-            fit: BoxFit.cover,
-
-            // ✅ HUGE: prevents decoding full-size 12MP images every rebuild
-            cacheWidth: (MediaQuery.of(context).size.width * 2).round(),
-          ),
-        ),
-),
-              ],
-            ),
-          );
-        },
-      );
-    },
-  ),
-),
-
-
-                // little breathing room at bottom
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                
                 SizedBox(height: clamp(h * 0.02, 10, 18)),
               ],
             ),

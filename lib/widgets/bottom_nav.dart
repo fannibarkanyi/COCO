@@ -15,7 +15,7 @@ class BottomNav extends StatelessWidget {
     const iconColor = Color(0xFF2B2B2B);
 
     return Material(
-      color: Colors.transparent, // kills Scaffold Material bg
+      color: Colors.transparent, 
       elevation: 0,
       child: SafeArea(
         top: false,
@@ -24,7 +24,7 @@ class BottomNav extends StatelessWidget {
           child: Container(
             height: 64,
             decoration: BoxDecoration(
-              color: Colors.transparent, // truly transparent
+              color: Colors.transparent, 
               borderRadius: BorderRadius.circular(22),
             ),
             child: Row(

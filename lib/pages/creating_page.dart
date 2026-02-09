@@ -76,9 +76,9 @@ Future<void> _pickFromGallery() async {
                     ),
                   ),
                   onTap: () async {
-  Navigator.pop(context);      // close the sheet first
-  await _pickFromGallery();    // open picker
-},
+                    Navigator.pop(context);      
+                    await _pickFromGallery();    
+                  },
                 ),
                 ListTile(
                   leading: const Icon(Icons.auto_awesome, color: dark),
@@ -91,7 +91,6 @@ Future<void> _pickFromGallery() async {
                     ),
                   ),
                   onTap: () {
-                    // not counting as “uploaded photo” per your requirement
                     Navigator.pop(context);
                   },
                 ),
@@ -232,27 +231,17 @@ Future<void> _pickFromGallery() async {
                                     decoration: BoxDecoration(
                                       color: const Color(0xFFA5C5A0),
                                       borderRadius: BorderRadius.circular(18),
-                                      boxShadow: [
-                                        // BoxShadow(
-                                        //   color: const Color.fromRGBO(43, 43, 43, 1),
-                                        //   blurRadius: 10,
-                                        //   offset: const Offset(0, 6),
-                                        // ),
-                                      ],
                                     ),
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(18),
                                       child: Stack(
                                         fit: StackFit.expand,
                                         children: [
-                                          // ✅ image preview
                                           if (_selectedImage != null)
                                             Image.file(
                                               _selectedImage!,
                                               fit: BoxFit.cover,
                                             ),
-
-                                          // ✅ dashed border + overlay content
                                           CustomPaint(
                                             painter: _DashedBorderPainter(
                                               color: dark,
@@ -310,7 +299,7 @@ Future<void> _pickFromGallery() async {
                             SizedBox(
                               width: 108,
                               child: OutlinedButton(
-                                onPressed: _goToPostDetails, // ✅ Skip always works
+                                onPressed: _goToPostDetails, 
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: dark,
                                   side: const BorderSide(color: dark, width: 1.2),
@@ -333,7 +322,7 @@ Future<void> _pickFromGallery() async {
                             SizedBox(
                               width: 108,
                               child: ElevatedButton(
-                                onPressed: hasUploadedPhoto ? _onNext : null, // ✅ gated
+                                onPressed: hasUploadedPhoto ? _onNext : null,
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: dark,
                                   foregroundColor: bg,
@@ -374,7 +363,6 @@ Future<void> _pickFromGallery() async {
   }
 }
 
-/// Dashed rounded-rect border painter
 class _DashedBorderPainter extends CustomPainter {
   final Color color;
   final double radius;

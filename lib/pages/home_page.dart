@@ -62,7 +62,6 @@ class HomePage extends StatelessWidget {
                 ),
               ),
 
-          // CONTENT
           SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,7 +97,7 @@ class HomePage extends StatelessWidget {
 
                 const Spacer(),
 
-                // BIG ACTION CARD (Create Post)
+                // Create Post
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Material(
@@ -126,7 +125,7 @@ class HomePage extends StatelessWidget {
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween, // ✅ key
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween, 
                                 children: const [
                                   Text(
                                     "Create a",
@@ -149,7 +148,7 @@ class HomePage extends StatelessWidget {
                                   ),
                                   Text(
                                     "post something for your page",
-                                    maxLines: 1, // ✅ prevents layout surprises
+                                    maxLines: 1, 
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       color: bg,
@@ -188,7 +187,7 @@ class HomePage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Row(
                     children: [
-                      // ✅ YOUR ACTIVITY CARD (ONLY place ActivityPage is opened)
+                      // ATIVITY
                       Expanded(
                         child: Material(
                           color: Colors.transparent,
@@ -245,8 +244,6 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
-/* ---------------- SMALL CARD ---------------- */
 
 class _SmallCard extends StatelessWidget {
   final String titleTop;

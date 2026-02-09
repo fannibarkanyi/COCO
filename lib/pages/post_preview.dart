@@ -13,7 +13,7 @@ import 'activity_page.dart';
 class PostPreviewChoosePage extends StatefulWidget {
   const PostPreviewChoosePage({
     super.key,
-    required this.imagePath, // can be '' for now
+    required this.imagePath, 
     required this.caption,
     required this.description,
     required this.location,
@@ -59,15 +59,13 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
     }
   }
 
-  /// ✅ Max width like the mock
   double _previewWidth(double screenW) {
     return math.min(screenW * 0.72, 320.0);
   }
 
-  /// ✅ Aspect ratios by mode
-  /// Story: 9/16 (tall)
-  /// Post: 4/5 (feed-ish)
-  /// Blog: 3/4 (still tall, room for text)
+  // Story: 9/16 
+  // Post: 4/5 
+  // Blog: 3/4 
   double get _previewAspect {
     if (selected == 0) return 9 / 16;
     if (selected == 1) return 4 / 5;
@@ -179,7 +177,6 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
 
                   const SizedBox(height: 30),
 
-                  // Segmented buttons
                   _SegmentedTabs(
                     selectedIndex: selected,
                     onChanged: (i) => setState(() => selected = i),
@@ -187,13 +184,12 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
 
                   const SizedBox(height: 20),
 
-                  // ✅ Preview area (ratio always preserved)
+                  // Preview area 
                   Expanded(
                     child: LayoutBuilder(
                       builder: (context, c) {
                         final maxW = _previewWidth(w);
 
-                        // height = width / aspect  =>  width = height * aspect
                         final maxWFromHeight = c.maxHeight * aspect;
                         final cardW = math.min(maxW, maxWFromHeight);
 
@@ -232,16 +228,16 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
                   // Choose button
                   Center(
                     child: SizedBox(
-                      width: 108,
+                      width: 115,
                       height: 52,
                       child: ElevatedButton(
                         onPressed: () async {
                           final type = selected == 0 ? "story" : selected == 1 ? "post" : "blog";
 
-                          // 1) Save record
+                          // Save record
                           await FirebaseFirestore.instance.collection("activity").add({
                             "type": type,
-                            "imagePath": widget.imagePath, // local path for now
+                            "imagePath": widget.imagePath, 
                             "caption": widget.caption,
                             "description": widget.description,
                             "location": widget.location,
@@ -250,7 +246,7 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
                             "createdAt": FieldValue.serverTimestamp(),
                           });
 
-                          // 2) Popup success
+                          // Popup success
                           if (!mounted) return;
                           showDialog(
                             // ignore: duplicate_ignore
@@ -266,7 +262,6 @@ class _PostPreviewChoosePageState extends State<PostPreviewChoosePage> {
                               ],
                             ),
                           ).then((_) {
-                            // 3) Go to Activity page after popup closes
                             Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(builder: (_) => const AppShell(initialIndex: 0)),
                             (route) => false,
@@ -361,9 +356,6 @@ class _SegmentedTabs extends StatelessWidget {
   }
 }
 
-/// ==============================
-// STORY PREVIEW
-
 class StoryPreview extends StatelessWidget {
   const StoryPreview({
     super.key,
@@ -391,7 +383,7 @@ class StoryPreview extends StatelessWidget {
           // image
           Positioned.fill(child: _PreviewImage(imagePath: imagePath)),
 
-          // ✅ top bar: avatar + username + song under username
+          // avatar + username + song under username
           Positioned(
             top: 10,
             left: 10,
@@ -459,7 +451,7 @@ class StoryPreview extends StatelessWidget {
             ),
           ),
 
-          // caption/details overlay
+          // caption / details overlay
           Positioned(
             left: 14,
             right: 14,
@@ -500,26 +492,6 @@ class StoryPreview extends StatelessWidget {
                         ),
                       ),
                     ],
-                    // (optional) keep the bottom row music if you still want it there:
-                    // if (location.trim().isNotEmpty && music.trim().isNotEmpty)
-                    //   const SizedBox(width: 10),
-                    // if (music.trim().isNotEmpty) ...[
-                    //   const Icon(Icons.music_note, size: 14, color: Color(0xFFEBEBEB)),
-                    //   const SizedBox(width: 4),
-                    //   Flexible(
-                    //     child: Text(
-                    //       music,
-                    //       overflow: TextOverflow.ellipsis,
-                    //       style: const TextStyle(
-                    //         color: Color(0xFFEBEBEB),
-                    //         fontSize: 12,
-                    //         fontWeight: FontWeight.w700,
-                    //         fontFamily: "Inter",
-                    //         shadows: [Shadow(blurRadius: 10, color: Colors.black)],
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ],
                   ],
                 ),
               ],
@@ -584,10 +556,6 @@ class StoryPreview extends StatelessWidget {
   }
 }
 
-
-
-// POST PREVIEW
-
 class PostPreview extends StatelessWidget {
   const PostPreview({
     super.key,
@@ -617,7 +585,7 @@ class PostPreview extends StatelessWidget {
         color: const Color(0xFFF2F2F2),
         child: Column(
           children: [
-            // Header row (avatar + username + optional location)
+            // Header row
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
               child: Row(
@@ -629,7 +597,7 @@ class PostPreview extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
 
-                  // username + location stacked
+                  // username + location 
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -730,9 +698,6 @@ class PostPreview extends StatelessWidget {
   }
 }
 
-
-// BLOG PREVIEW
-
 class BlogPreview extends StatelessWidget {
   const BlogPreview({
     super.key,
@@ -818,7 +783,6 @@ class BlogPreview extends StatelessWidget {
   }
 }
 
-/// Shared image widget: shows placeholder if no image yet
 class _PreviewImage extends StatelessWidget {
   const _PreviewImage({required this.imagePath});
 
@@ -835,7 +799,6 @@ class _PreviewImage extends StatelessWidget {
       );
     }
 
-    // if you pass local file paths from image_picker
     final file = File(imagePath);
     return Image.file(
       file,

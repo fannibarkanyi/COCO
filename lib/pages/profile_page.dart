@@ -14,10 +14,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  // ✅ Demo “already signed in” user id (no auth flow)
   static const String _uid = "demo-user";
 
-  // Local UI state (synced with Firestore)
   String name = "Dr Maria Sofia Mathis";
   String email = "drmathis@kabbe.com";
   String password = "password123";
@@ -50,15 +48,14 @@ class _ProfilePageState extends State<ProfilePage> {
         setState(() {
           name = (data['displayName'] as String?) ?? name;
           email = (data['email'] as String?) ?? email;
-          password = (data['password'] as String?) ?? password; // demo only
+          password = (data['password'] as String?) ?? password; 
           photoUrl = data['photoUrl'] as String?;
         });
       } else {
-        // Create initial profile doc
         await _userDoc.set({
           'displayName': name,
           'email': email,
-          'password': password, // demo only
+          'password': password, 
           'photoUrl': null,
           'social': {
             'instagram': '',
@@ -150,7 +147,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
       final file = File(picked.path);
 
-      // ✅ Unique path so caching won’t fight you
       final filename = "avatar_${DateTime.now().millisecondsSinceEpoch}.jpg";
       final ref = FirebaseStorage.instance.ref().child('users/$_uid/$filename');
 
@@ -308,7 +304,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           initialValue: password,
                           obscure: true,
                           applyLocal: (v) => password = v,
-                          firestoreUpdate: (v) => {'password': v}, // demo only
+                          firestoreUpdate: (v) => {'password': v}, 
                         ),
                       ),
 
@@ -380,7 +376,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
 
-              // AVATAR (tap to change)
+              // Avatar
               Positioned(
                 top: avatarTop,
                 left: 0,
@@ -398,7 +394,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
 
-              // Sign out (for show)
+              // Sign out 
               Positioned(
                 top: signOutTop,
                 left: 0,

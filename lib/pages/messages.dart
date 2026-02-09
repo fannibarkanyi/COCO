@@ -72,7 +72,7 @@ class _MessagesState extends State<Messages> {
 
                 const SizedBox(height: 20),
 
-                // Chips row (tappable)
+                // Filters
                 SizedBox(
                   height: 46,
                   child: ListView(
@@ -113,7 +113,6 @@ class _MessagesState extends State<Messages> {
 
                 const SizedBox(height: 20),
 
-                // Divider line like the mock
                 const Divider(height: 1, thickness: 1, color: divider),
 
                 // Messages list area
@@ -140,7 +139,6 @@ class _MessagesState extends State<Messages> {
 
                       const SizedBox(height: 12),
 
-                      // Fake rows (optional) to look like the mock
                       const _MessageRow(
                         name: "Company",
                         preview: "Apuasi toi eli rti on etko. Miehensa tynnessa antakon vie sai tuo.",
@@ -177,7 +175,6 @@ class _MessagesState extends State<Messages> {
   }
 }
 
-/// Chip that turns green when selected
 class _SelectableChip extends StatelessWidget {
   final String label;
   final IconData icon;
@@ -229,7 +226,6 @@ class _SelectableChip extends StatelessWidget {
   }
 }
 
-/// Simple message row (fake)
 class _MessageRow extends StatelessWidget {
   final String name;
   final String preview;
@@ -301,21 +297,4 @@ class _MessageRow extends StatelessWidget {
       ),
     );
   }
-}
-
-/// Curved header like your mock (simple, clean)
-// ignore: unused_element
-class _HeaderCurveClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final p = Path();
-    p.lineTo(0, size.height);
-    p.quadraticBezierTo(size.width * 0.65, size.height * 0.75, size.width, size.height * 0.55);
-    p.lineTo(size.width, 0);
-    p.close();
-    return p;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }

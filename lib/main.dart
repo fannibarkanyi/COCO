@@ -47,7 +47,7 @@ class OnboardingPage extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerRight,
               child: Transform.translate(
-                offset: const Offset(0, 0), // tweak 80..160
+                offset: const Offset(0, 0), 
                 child: SvgPicture.asset(
                   'assets/circle.svg',
                   width: 325,
@@ -58,7 +58,6 @@ class OnboardingPage extends StatelessWidget {
             ),
           ),
 
-          // CONTENT
           Padding(
             padding: const EdgeInsets.all(24.0),
             child: Column(
@@ -123,38 +122,37 @@ class OnboardingPage extends StatelessWidget {
 
                 const Spacer(),
 
-Padding(
-  padding: const EdgeInsets.fromLTRB(20, 0, 20, 200),
-  child: SizedBox(
-    width: double.infinity, // 👈 forces it to stay inside screen
-    child: PrimaryButton(
-      text: "Make the first step",
-      height: 61,
-      fontSize: 26,
-      trailing: Padding(
-        padding: const EdgeInsets.only(left: 10),
-        child: SvgPicture.asset(
-          'assets/arrow.svg',
-          width: 18,
-          height: 18,
-          colorFilter: const ColorFilter.mode(
-            Color.fromRGBO(235, 235, 235, 1),
-            BlendMode.srcIn,
-          ),
-        ),
-      ),
-      onPressed: () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) => shell.AppShell(),
-          ),
-        );
-      },
-    ),
-  ),
-),
-
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 200),
+                  child: SizedBox(
+                    width: double.infinity, 
+                    child: PrimaryButton(
+                      text: "Make the first step",
+                      height: 61,
+                      fontSize: 26,
+                      trailing: Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: SvgPicture.asset(
+                          'assets/arrow.svg',
+                          width: 18,
+                          height: 18,
+                          colorFilter: const ColorFilter.mode(
+                            Color.fromRGBO(235, 235, 235, 1),
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => shell.AppShell(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

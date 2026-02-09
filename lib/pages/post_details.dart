@@ -80,18 +80,18 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
 
           // TOP SVG
            Positioned(
-  top: 0,
-  left: 0,
-  right: 0,
-  child: AspectRatio(
-    aspectRatio: _topAspect,
-    child: SvgPicture.asset(
-      'assets/posting2_top.svg',
-      fit: BoxFit.contain, // or BoxFit.fill (see note below)
-      alignment: Alignment.topLeft,
-    ),
-  ),
-),
+            top: 0,
+            left: 0,
+            right: 0,
+            child: AspectRatio(
+              aspectRatio: _topAspect,
+              child: SvgPicture.asset(
+                'assets/posting2_top.svg',
+                fit: BoxFit.contain, // or BoxFit.fill (see note below)
+                alignment: Alignment.topLeft,
+              ),
+            ),
+          ),
 
           SafeArea(
             child: SingleChildScrollView(
@@ -168,7 +168,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                   ),
                   const SizedBox(height: 10),
 
-                  // Generate with AI button (same style language as your other buttons)
+                  // Generate with AI button
                   SizedBox(
                     height: 44,
                     child: ElevatedButton(
@@ -207,7 +207,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
 
                   const SizedBox(height: 10),
 
-                  // Social icons row
+                  // Social icons
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -262,11 +262,11 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                                 description: descCtrl.text.trim(),
                                 location: locationCtrl.text.trim(),
                                 music: musicCtrl.text.trim(),
-                                platforms: _selectedPlatforms(), // ✅ NEW
+                                platforms: _selectedPlatforms(), 
                               ),
                             ),
                           );
-                        }, // ✅ IMPORTANT: closes onPressed
+                        }, 
 
                         style: ElevatedButton.styleFrom(
                           backgroundColor: dark,
