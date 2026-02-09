@@ -219,162 +219,161 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ),
-
-              // CONTENT
-              SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(24, 30, 24, contentBottom),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Expanded(
-                            child: Text(
-                              "Profile",
-                              style: TextStyle(
-                                fontSize: 36,
-                                fontWeight: FontWeight.w700,
-                                fontFamily: "Inter",
-                                color: dark,
-                              ),
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.settings),
-                            color: dark,
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: (contentTop - 24 - 56).clamp(0, 9999)),
-
-                      // Name + edit
-                      Center(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              name,
-                              style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w700,
-                                fontFamily: "Inter",
-                                color: dark,
-                              ),
-                            ),
-                            const SizedBox(width: 6),
-                            GestureDetector(
-                              onTap: () => _editField(
-                                title: "Edit name",
-                                initialValue: name,
-                                obscure: false,
-                                applyLocal: (v) => name = v,
-                                firestoreUpdate: (v) => {'displayName': v},
-                              ),
-                              child: const Icon(Icons.edit,
-                                  size: 18, color: dark),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      _InfoRow(
-                        label: "Email:",
-                        value: email,
-                        onEdit: () => _editField(
-                          title: "Edit email",
-                          initialValue: email,
-                          obscure: false,
-                          applyLocal: (v) => email = v,
-                          firestoreUpdate: (v) => {'email': v},
-                        ),
-                      ),
-
-                      const SizedBox(height: 6),
-
-                      _InfoRow(
-                        label: "Password:",
-                        value: maskedPassword,
-                        onEdit: () => _editField(
-                          title: "Edit password",
-                          initialValue: password,
-                          obscure: true,
-                          applyLocal: (v) => password = v,
-                          firestoreUpdate: (v) => {'password': v}, 
-                        ),
-                      ),
-
-                      const SizedBox(height: 30),
-
-                      const Text(
-                        "Social media",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                          fontFamily: "Inter",
-                          color: dark,
-                        ),
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      IntrinsicHeight(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  _SocialTile(
-                                      icon: Icons.camera_alt_outlined,
-                                      label: "Instagram",
-                                      onTap: () {}),
-                                  _SocialTile(
-                                      icon: Icons.facebook,
-                                      label: "Facebook",
-                                      onTap: () {}),
-                                  _SocialTile(
-                                      icon: Icons.music_note,
-                                      label: "TikTok",
-                                      onTap: () {}),
-                                ],
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 14),
-                              child: VerticalDivider(
-                                thickness: 1,
-                                width: 1,
-                                color: dark,
-                              ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  _SocialTile(
-                                      icon: Icons.close, label: "X", onTap: () {}),
-                                  _SocialTile(
-                                      icon: Icons.business_center_outlined,
-                                      label: "LinkedIn",
-                                      onTap: () {}),
-                                  _SocialTile(
-                                      icon: Icons.add_box_outlined,
-                                      label: "Add more",
-                                      onTap: () {}),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+// CONTENT
+SafeArea(
+  child: SingleChildScrollView(
+    padding: EdgeInsets.fromLTRB(24, 30, 24, contentBottom),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const Expanded(
+              child: Text(
+                "Profile",
+                style: TextStyle(
+                  fontSize: 36,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: "Inter",
+                  color: dark,
                 ),
               ),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.settings),
+              color: dark,
+            ),
+          ],
+        ),
+
+        SizedBox(height: (contentTop - 24 - 56).clamp(0, 9999)),
+
+        // Name + edit
+        Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                name,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: "Inter",
+                  color: dark,
+                ),
+              ),
+              const SizedBox(width: 6),
+              GestureDetector(
+                onTap: () => _editField(
+                  title: "Edit name",
+                  initialValue: name,
+                  obscure: false,
+                  applyLocal: (v) => name = v,
+                  firestoreUpdate: (v) => {'displayName': v},
+                ),
+                child: const Icon(Icons.edit, size: 18, color: dark),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 10),
+
+        _InfoRow(
+          label: "Email:",
+          value: email,
+          onEdit: () => _editField(
+            title: "Edit email",
+            initialValue: email,
+            obscure: false,
+            applyLocal: (v) => email = v,
+            firestoreUpdate: (v) => {'email': v},
+          ),
+        ),
+
+        const SizedBox(height: 6),
+
+        _InfoRow(
+          label: "Password:",
+          value: maskedPassword,
+          onEdit: () => _editField(
+            title: "Edit password",
+            initialValue: password,
+            obscure: true,
+            applyLocal: (v) => password = v,
+            firestoreUpdate: (v) => {'password': v},
+          ),
+        ),
+
+        const SizedBox(height: 30),
+
+        const Text(
+          "Social media",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            fontFamily: "Inter",
+            color: dark,
+          ),
+        ),
+
+        const SizedBox(height: 16),
+
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    _SocialTile(
+                        icon: Icons.camera_alt_outlined,
+                        label: "Instagram",
+                        onTap: () {}),
+                    _SocialTile(
+                        icon: Icons.facebook,
+                        label: "Facebook",
+                        onTap: () {}),
+                    _SocialTile(
+                        icon: Icons.music_note,
+                        label: "TikTok",
+                        onTap: () {}),
+                  ],
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 14),
+                child: VerticalDivider(
+                  thickness: 1,
+                  width: 1,
+                  color: dark,
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    _SocialTile(icon: Icons.close, label: "X", onTap: () {}),
+                    _SocialTile(
+                        icon: Icons.business_center_outlined,
+                        label: "LinkedIn",
+                        onTap: () {}),
+                    _SocialTile(
+                        icon: Icons.add_box_outlined,
+                        label: "Add more",
+                        onTap: () {}),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 24),
+      ],
+    ),
+  ),
+),
 
               // Avatar
               Positioned(
