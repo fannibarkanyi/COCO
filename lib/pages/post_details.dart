@@ -127,7 +127,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                     ],
                   ),
 
-                  const SizedBox(height: 60),
+                  const SizedBox(height: 40),
 
                   _InputField(
                     controller: captionCtrl,
