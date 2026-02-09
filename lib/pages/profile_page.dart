@@ -227,7 +227,7 @@ class _ProfilePageState extends State<ProfilePage> {
               // CONTENT
               SafeArea(
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(24, 24, 24, contentBottom),
+                  padding: EdgeInsets.fromLTRB(24, 30, 24, contentBottom),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

@@ -29,7 +29,6 @@ class _StatisticsPageState extends State<StatisticsPage> {
 
     double clamp(double v, double min, double max) => v.clamp(min, max);
 
-    final sidePad = clamp(w * 0.05, 18, 24);
     final gridGap = clamp(w * 0.035, 12, 16);
     final bottomSpace = clamp(h * 0.16, 110, 140);
 
@@ -56,7 +55,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
 
           SafeArea(
             child: SingleChildScrollView(
-              padding: EdgeInsets.fromLTRB(sidePad, 16, sidePad, bottomSpace),
+              padding: EdgeInsets.fromLTRB(24, 35, 24, bottomSpace),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -68,8 +67,8 @@ class _StatisticsPageState extends State<StatisticsPage> {
                         child: Text(
                           "Statistics",
                           style: TextStyle(
-                            fontSize: clamp(w * 0.09, 30, 40),
-                            fontWeight: FontWeight.w900,
+                            fontSize: 35,
+                            fontWeight: FontWeight.w700,
                             color: StatisticsPage.dark,
                             height: 1.05,
                           ),
@@ -79,7 +78,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                     ],
                   ),
 
-                  const SizedBox(height: 14),
+                  const SizedBox(height: 20),
 
                   // Chips row (✅ now clickable)
                   SizedBox(
@@ -278,11 +277,11 @@ class _StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
 
-    final double cardHeight = (w * 0.45).clamp(165, 190).toDouble();
+    final double cardHeight = (w * 0.25).clamp(165, 190).toDouble();
 
     return Container(
       height: cardHeight,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(15, 20, 20, 10),
       decoration: BoxDecoration(
         color: const Color(0xFFEBEBEB),
         borderRadius: BorderRadius.circular(18),
@@ -294,10 +293,10 @@ class _StatCard extends StatelessWidget {
             child: Text(
               bigText,
               style: const TextStyle(
-                fontSize: 48,
-                fontWeight: FontWeight.w900,
+                fontSize: 60,
+                fontWeight: FontWeight.w700,
                 color: StatisticsPage.dark,
-                height: 1.0,
+                height: 0.6,
               ),
             ),
           ),
@@ -306,9 +305,10 @@ class _StatCard extends StatelessWidget {
             child: Text(
               label,
               style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w900,
+                fontSize: 25,
+                fontWeight: FontWeight.w500,
                 color: StatisticsPage.dark,
+                height: 1,
               ),
             ),
           ),
@@ -343,8 +343,8 @@ class _DiscoveryCard extends StatelessWidget {
           const Text(
             "Profile Discovery",
             style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w900,
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
               color: StatisticsPage.dark,
             ),
           ),
@@ -352,8 +352,8 @@ class _DiscoveryCard extends StatelessWidget {
           const Text(
             "See your growth in a month",
             style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
               color: Color(0xFF3D3D3D),
             ),
           ),

@@ -58,25 +58,25 @@ class _MessagesState extends State<Messages> {
               children: [
                 // Title
                 Padding(
-                  padding: EdgeInsets.fromLTRB(sidePad, 12, sidePad, 0),
+                  padding: EdgeInsets.fromLTRB(24, 35, 24, 0),
                   child: Text(
                     "Messages",
                     style: TextStyle(
-                      fontSize: clamp(w * 0.09, 30, 40),
-                      fontWeight: FontWeight.w900,
+                      fontSize: 35,
+                      fontWeight: FontWeight.w700,
                       color: dark,
                       height: 1.05,
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
 
                 // Chips row (tappable)
                 SizedBox(
                   height: 46,
                   child: ListView(
-                    padding: EdgeInsets.symmetric(horizontal: sidePad),
+                    padding: EdgeInsets.symmetric(horizontal: 24),
                     scrollDirection: Axis.horizontal,
                     children: [
                       _SelectableChip(
@@ -111,7 +111,7 @@ class _MessagesState extends State<Messages> {
                   ),
                 ),
 
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
 
                 // Divider line like the mock
                 const Divider(height: 1, thickness: 1, color: divider),
