@@ -79,7 +79,7 @@ The target user is a self-employed person or micro-business owner (think: electr
 
 > The following screens are from the Figma design concept. The visual design is still being finalized.
 
-![Home](home.jpg)
-![Posting](story.jpg)
-![Activity](activity.jpg)
-![Statistics](statistics.jpg)
+<img src="home.jpg" width="220">
+<img src="story.jpg" width="220">
+<img src="activity.jpg" width="220">
+<img src="statistics.jpg" width="220">
